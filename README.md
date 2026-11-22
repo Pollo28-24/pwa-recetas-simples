@@ -16,8 +16,9 @@ Aplicación web progresiva (PWA) de recetas construida con **Next.js 16 + React 
   - Filtro por cocina/país (`list.php?a=list` + áreas reales del catálogo) y filtro dinámico por ingrediente principal (`list.php?i=list` + `filter.php?i=`).
   - Descubrimiento instantáneo con **«¿Qué cocino hoy?»** (`random.php` vía `/api/meals/random`).
 - **Ficha de receta práctica para cocinar**:
-  - Ingredientes con miniaturas (`images/ingredients/{nombre}-small.png`) y checklist persistente en `localStorage`.
-  - Pasos de preparación numerados y marcables como completados en `localStorage`.
+  - Cabecera editorial con fotografía, conteo de ingredientes y pasos, acceso rápido a favoritos y enlaces multimedia.
+  - Lista de ingredientes tipo recetario con miniaturas reales (`images/ingredients/{nombre}-small.png`) y medidas alineadas.
+  - Pasos de preparación numerados de lectura limpia (`62ch`) sin controles innecesarios.
   - Metadatos completos: nombre alternativo, etiquetas y cocina/categoría enlazables, vídeo en YouTube, fuente original, enlace canónico a TheMealDB y recetas relacionadas por categoría y cocina.
 - **PWA Offline**:
   - `app/manifest.ts` con los 8 iconos PNG oficiales y shortcuts de acceso rápido.

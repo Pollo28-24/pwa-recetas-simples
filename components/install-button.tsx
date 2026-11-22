@@ -94,8 +94,9 @@ export function InstallButton() {
       <button
         type="button"
         onClick={handleInstall}
+        aria-label="Instalar aplicación"
         aria-expanded={isIosSafari ? showIosGuide : undefined}
-        className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-line-strong bg-panel px-3.5 py-2 text-[13px] font-semibold text-text transition-colors duration-150 hover:bg-sun active:scale-[0.985]"
+        className="inline-flex size-10 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-panel text-[13px] font-semibold text-text transition-colors duration-150 hover:bg-sun active:scale-[0.985] sm:min-h-11 sm:w-auto sm:px-3.5 sm:py-2"
       >
         <svg
           viewBox="0 0 24 24"
@@ -112,7 +113,6 @@ export function InstallButton() {
           <path d="M5 20h14" />
         </svg>
         <span className="hidden sm:inline">Instalar app</span>
-        <span className="sm:hidden">Instalar</span>
       </button>
 
       {isIosSafari && showIosGuide ? (
