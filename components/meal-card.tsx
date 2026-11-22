@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/favorite-button";
+import { getMealImageUrl } from "@/lib/mealdb";
 import type { MealSummary } from "@/lib/types";
 
 type MealCardProps = {
@@ -18,7 +19,7 @@ export function MealCard({ meal, priority = false }: MealCardProps) {
       <Link href={`/receta/${meal.idMeal}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-line bg-panel">
           <Image
-            src={meal.strMealThumb}
+            src={getMealImageUrl(meal.strMealThumb, "medium")}
             alt={meal.strMeal}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
@@ -26,7 +27,7 @@ export function MealCard({ meal, priority = false }: MealCardProps) {
             className="object-cover"
           />
         </div>
-        <p className="mt-2 truncate text-[10px] font-semibold uppercase tracking-wider text-muted">
+        <p className="mt-2 truncate text-xs font-medium text-muted">
           {meta || "Receta"}
         </p>
         <h3 className="mt-1 line-clamp-2 text-sm font-semibold group-hover:underline">

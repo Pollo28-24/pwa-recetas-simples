@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Open_Sans } from "next/font/google";
 import { FavoritesProvider } from "@/components/favorites-provider";
+import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { OfflineBanner } from "@/components/offline-banner";
 import { PwaRegister } from "@/components/pwa-register";
@@ -58,6 +59,7 @@ export default function RootLayout({
           <main id="contenido-principal" className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
             {children}
           </main>
+          <Footer />
           <PwaRegister />
         </FavoritesProvider>
       </body>

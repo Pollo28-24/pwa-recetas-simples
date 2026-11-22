@@ -1,4 +1,11 @@
-import type { CatalogResult, Ingredient, Meal, MealSummary } from "@/lib/types";
+import type {
+  CatalogResult,
+  CategoryInfo,
+  Ingredient,
+  IngredientInfo,
+  Meal,
+  MealSummary,
+} from "@/lib/types";
 
 export const MEALDB_BASE_URL = "https://www.themealdb.com/api/json/v1/1";
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
@@ -71,6 +78,14 @@ export function getMealImageUrl(
   if (size === "full") return thumb;
   if (/\/(small|medium|large|preview)$/i.test(thumb)) return thumb;
   return `${thumb}/${size}`;
+}
+
+export function getIngredientImageUrl(
+  ingredientName: string,
+  size: "small" | "medium" | "large" = "small",
+): string {
+  const normalized = ingredientName.trim().toLowerCase().replace(/\s+/g, "_");
+  return `https://www.themealdb.com/images/ingredients/${encodeURIComponent(normalized)}-${size}.png`;
 }
 
 export function getSafeHttpUrl(rawUrl: string | null | undefined): string | null {
@@ -151,6 +166,65 @@ export async function getAllMeals(): Promise<MealSummary[]> {
   return meals;
 }
 
+export async function getCategories(): Promise<CategoryInfo[]> {
+  const res = await fetchMealDbJson<{ categories?: CategoryInfo[] | null }>("/categories.php");
+  if (!res.ok || !Array.isArray(res.data?.categories)) return [];
+
+  return res.data.categories
+    .filter((cat) => Boolean(cat.strCategory && cat.strCategoryThumb))
+    .map((cat) => ({
+      idCategory: String(cat.idCategory),
+      strCategory: cat.strCategory.trim(),
+      strCategoryThumb: cat.strCategoryThumb,
+      strCategoryDescription: (cat.strCategoryDescription ?? "").trim(),
+    }))
+    .sort((a, b) => a.strCategory.localeCompare(b.strCategory, "es"));
+}
+
+/**
+ * Queries list.php?a=list and intersects against the populated catalog areas
+ * so empty country entries are not presented as broken filter options.
+ */
+export async function getAreas(activeCatalog?: MealSummary[]): Promise<string[]> {
+  const res = await fetchMealDbJson<{ meals?: Array<{ strArea?: string | null }> | null }>(
+    "/list.php?a=list",
+  );
+
+  const apiAreas =
+    res.ok && Array.isArray(res.data?.meals)
+      ? res.data.meals
+          .map((item) => (item.strArea ?? "").trim())
+          .filter(Boolean)
+      : [];
+
+  if (!activeCatalog || activeCatalog.length === 0) {
+    return [...new Set(apiAreas)].sort((a, b) => a.localeCompare(b, "es"));
+  }
+
+  const populated = new Set(
+    activeCatalog
+      .map((meal) => (meal.strArea ?? "").trim())
+      .filter(Boolean),
+  );
+
+  const valid = apiAreas.filter((area) => populated.has(area));
+  const merged = valid.length > 0 ? valid : [...populated];
+  return [...new Set(merged)].sort((a, b) => a.localeCompare(b, "es"));
+}
+
+export async function getIngredientNames(): Promise<string[]> {
+  const res = await fetchMealDbJson<{ meals?: IngredientInfo[] | null }>("/list.php?i=list");
+  if (!res.ok || !Array.isArray(res.data?.meals)) return [];
+
+  const names = new Set<string>();
+  for (const item of res.data.meals) {
+    const name = (item.strIngredient ?? "").trim();
+    if (name) names.add(name);
+  }
+
+  return [...names].sort((a, b) => a.localeCompare(b, "es"));
+}
+
 export async function getMealById(id: string): Promise<Meal | null> {
   if (!/^\d+$/.test(id)) return null;
   const res = await fetchMealDbJson<{ meals?: Meal[] | null }>(`/lookup.php?i=${id}`);
@@ -158,9 +232,31 @@ export async function getMealById(id: string): Promise<Meal | null> {
   return res.data.meals[0] ?? null;
 }
 
+export async function getRandomMeal(): Promise<Meal | null> {
+  const res = await fetchMealDbJson<{ meals?: Meal[] | null }>("/random.php", {
+    revalidate: false,
+  });
+  if (!res.ok || !Array.isArray(res.data?.meals)) return null;
+  return res.data.meals[0] ?? null;
+}
+
+export async function searchMealsByName(query: string): Promise<MealSummary[]> {
+  const trimmed = query.trim();
+  if (!trimmed) return [];
+
+  const res = await fetchMealDbJson<{ meals?: Meal[] | string | null }>(
+    `/search.php?s=${encodeURIComponent(trimmed)}`,
+  );
+  if (!res.ok || !Array.isArray(res.data?.meals)) return [];
+
+  return res.data.meals
+    .filter((meal) => meal.idMeal && meal.strMeal && meal.strMealThumb)
+    .map(toSummary);
+}
+
 export async function getMealsByCategory(
   category: string | null,
-  excludeId: string,
+  excludeId = "",
   limit = 4,
 ): Promise<MealSummary[]> {
   if (!category) return [];
@@ -171,7 +267,7 @@ export async function getMealsByCategory(
   if (!res.ok || !Array.isArray(res.data?.meals)) return [];
 
   return res.data.meals
-    .filter((meal) => meal.idMeal !== excludeId && meal.strMeal && meal.strMealThumb)
+    .filter((meal) => String(meal.idMeal) !== excludeId && meal.strMeal && meal.strMealThumb)
     .slice(0, limit)
     .map((meal) => ({
       idMeal: String(meal.idMeal),
@@ -180,6 +276,57 @@ export async function getMealsByCategory(
       strCategory: category,
       strArea: null,
     }));
+}
+
+export async function getMealsByArea(
+  area: string | null,
+  excludeId = "",
+  limit = 4,
+): Promise<MealSummary[]> {
+  if (!area) return [];
+
+  const res = await fetchMealDbJson<{ meals?: Meal[] | null }>(
+    `/filter.php?a=${encodeURIComponent(area)}`,
+  );
+  if (!res.ok || !Array.isArray(res.data?.meals)) return [];
+
+  return res.data.meals
+    .filter((meal) => String(meal.idMeal) !== excludeId && meal.strMeal && meal.strMealThumb)
+    .slice(0, limit)
+    .map((meal) => ({
+      idMeal: String(meal.idMeal),
+      strMeal: meal.strMeal,
+      strMealThumb: meal.strMealThumb,
+      strCategory: null,
+      strArea: area,
+    }));
+}
+
+export async function getMealsByIngredient(
+  ingredient: string,
+  catalogById?: Map<string, MealSummary>,
+): Promise<MealSummary[]> {
+  const normalized = ingredient.trim().replace(/\s+/g, "_");
+  if (!normalized) return [];
+
+  const res = await fetchMealDbJson<{ meals?: Meal[] | null }>(
+    `/filter.php?i=${encodeURIComponent(normalized)}`,
+  );
+  if (!res.ok || !Array.isArray(res.data?.meals)) return [];
+
+  return res.data.meals
+    .filter((meal) => meal.idMeal && meal.strMeal && meal.strMealThumb)
+    .map((meal) => {
+      const id = String(meal.idMeal);
+      const cached = catalogById?.get(id);
+      return {
+        idMeal: id,
+        strMeal: meal.strMeal,
+        strMealThumb: meal.strMealThumb,
+        strCategory: cached?.strCategory ?? null,
+        strArea: cached?.strArea ?? null,
+      };
+    });
 }
 
 export function getIngredients(meal: Meal): Ingredient[] {

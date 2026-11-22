@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import Image from "next/image";
+import { useCallback, useState, useSyncExternalStore } from "react";
+import { getIngredientImageUrl } from "@/lib/mealdb";
 import type { Ingredient } from "@/lib/types";
 
 const STORAGE_PREFIX = "recetario:checklist:v1:";
@@ -58,6 +60,34 @@ function writeChecked(mealId: string, next: number[]): void {
   }
 }
 
+function IngredientThumb({ name }: { name: string }) {
+  const [hidden, setHidden] = useState(false);
+
+  if (hidden) {
+    return (
+      <span
+        aria-hidden="true"
+        className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-line bg-panel text-xs font-semibold text-muted"
+      >
+        {name.slice(0, 1).toUpperCase()}
+      </span>
+    );
+  }
+
+  return (
+    <span className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-line bg-panel">
+      <Image
+        src={getIngredientImageUrl(name, "small")}
+        alt=""
+        width={36}
+        height={36}
+        className="size-8 object-contain"
+        onError={() => setHidden(true)}
+      />
+    </span>
+  );
+}
+
 export function IngredientsList({
   mealId,
   ingredients,
@@ -111,7 +141,7 @@ export function IngredientsList({
   return (
     <div>
       {checkedList.length > 0 ? (
-        <div className="mb-2 flex items-center justify-between text-xs text-muted">
+        <div className="mb-3 flex items-center justify-between text-xs text-muted">
           <span className="tabular-nums">
             {checkedList.length} de {ingredients.length} marcados
           </span>
@@ -131,19 +161,20 @@ export function IngredientsList({
 
           return (
             <li key={`${ingredient.name}-${index}`}>
-              <label className="flex min-h-11 cursor-pointer items-center gap-3 py-2.5">
+              <label className="flex min-h-12 cursor-pointer items-center gap-3 py-2.5">
                 <input
                   type="checkbox"
                   checked={isChecked}
                   onChange={() => toggle(index)}
                   className="size-4 shrink-0 accent-accent"
                 />
-                <span className="text-sm leading-relaxed">
-                  <span className={isChecked ? "text-muted line-through" : ""}>
+                <IngredientThumb name={ingredient.name} />
+                <span className="flex flex-1 flex-wrap items-baseline justify-between gap-x-2 text-sm leading-relaxed">
+                  <span className={isChecked ? "text-muted line-through" : "font-medium"}>
                     {ingredient.name}
                   </span>
                   {ingredient.measure ? (
-                    <span className="ml-2 text-muted">{ingredient.measure}</span>
+                    <span className="text-xs text-muted">{ingredient.measure}</span>
                   ) : null}
                 </span>
               </label>
