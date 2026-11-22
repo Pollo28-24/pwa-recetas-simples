@@ -81,8 +81,8 @@ export default async function RecipePage({ params }: PageProps) {
 
       <article className="space-y-8">
         <header className="motion-hero overflow-hidden rounded-3xl border border-line bg-surface">
-          <div className="grid items-stretch lg:grid-cols-12">
-            <div className="relative aspect-[4/3] overflow-hidden bg-panel lg:col-span-6 lg:aspect-auto lg:min-h-80">
+          <div className="grid grid-cols-1 items-stretch lg:grid-cols-2">
+            <div className="relative aspect-[4/3] overflow-hidden bg-panel lg:aspect-auto lg:min-h-[380px]">
               <Image
                 src={getMealImageUrl(meal.strMealThumb, "large")}
                 alt={meal.strMeal}
@@ -93,7 +93,7 @@ export default async function RecipePage({ params }: PageProps) {
               />
             </div>
 
-            <div className="flex flex-col justify-between gap-6 p-6 sm:p-8 lg:col-span-6">
+            <div className="flex flex-col justify-between gap-6 p-6 sm:p-8">
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center gap-2 text-[13px]">
                   {meal.strCategory ? (

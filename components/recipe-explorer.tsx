@@ -162,14 +162,14 @@ export function RecipeExplorer({
         <div className="motion-hero flex flex-col justify-between rounded-3xl border border-line bg-panel p-5 sm:p-7 lg:col-span-8">
           <div>
             <div className="flex items-center gap-4">
-              <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-line-strong bg-sun p-1 shadow-xs transition-transform duration-200 hover:-rotate-3 sm:size-20">
+              <div className="relative size-16 shrink-0 overflow-hidden rounded-full border border-line-strong bg-sun p-1 shadow-xs transition-transform duration-200 hover:-rotate-3 sm:size-20">
                 <Image
                   src="/icons/icon-192x192.png"
                   alt="Ilustración del chef de Recetario"
-                  width={80}
-                  height={80}
+                  fill
+                  sizes="80px"
                   priority
-                  className="size-full rounded-full bg-surface object-contain"
+                  className="rounded-full bg-surface object-contain p-1"
                 />
               </div>
 
@@ -433,13 +433,15 @@ export function RecipeExplorer({
                     : "border-line bg-surface text-muted hover:border-line-strong hover:text-text",
                 ].join(" ")}
               >
-                <Image
-                  src={item.strCategoryThumb}
-                  alt=""
-                  width={26}
-                  height={26}
-                  className="size-6 rounded-full object-contain"
-                />
+                <span className="relative block size-6 shrink-0 overflow-hidden rounded-full">
+                  <Image
+                    src={item.strCategoryThumb}
+                    alt=""
+                    fill
+                    sizes="24px"
+                    className="object-contain"
+                  />
+                </span>
                 <span>{item.strCategory}</span>
               </button>
             );
@@ -448,13 +450,15 @@ export function RecipeExplorer({
 
         {activeCategoryInfo?.strCategoryDescription ? (
           <div className="motion-panel mt-3 flex items-start gap-3.5 rounded-2xl border border-line bg-surface p-4 text-[13px] leading-relaxed text-muted">
-            <Image
-              src={activeCategoryInfo.strCategoryThumb}
-              alt=""
-              width={48}
-              height={48}
-              className="size-12 shrink-0 rounded-xl bg-panel object-contain p-1"
-            />
+            <div className="relative size-12 shrink-0 overflow-hidden rounded-xl bg-panel">
+              <Image
+                src={activeCategoryInfo.strCategoryThumb}
+                alt=""
+                fill
+                sizes="48px"
+                className="object-contain p-1"
+              />
+            </div>
             <p className="max-w-[75ch]">
               <strong className="text-text">{activeCategoryInfo.strCategory}:</strong>{" "}
               {activeCategoryInfo.strCategoryDescription}

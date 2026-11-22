@@ -23,14 +23,14 @@ export function Header() {
           className="group inline-flex shrink-0 items-center gap-2 rounded-xl py-1 pr-1 sm:gap-2.5 sm:pr-2"
           aria-label="Recetario, inicio"
         >
-          <span className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-line bg-surface shadow-xs transition-transform duration-150 group-hover:scale-105 sm:size-10">
+          <span className="relative block size-9 shrink-0 overflow-hidden rounded-full border border-line bg-surface shadow-xs transition-transform duration-150 group-hover:scale-105 sm:size-10">
             <Image
               src="/icons/icon-96x96.png"
               alt=""
-              width={40}
-              height={40}
+              fill
+              sizes="40px"
               priority
-              className="size-8 object-contain sm:size-9"
+              className="object-contain p-0.5"
             />
           </span>
           <span className="font-display text-lg font-bold tracking-tight text-text sm:text-xl">

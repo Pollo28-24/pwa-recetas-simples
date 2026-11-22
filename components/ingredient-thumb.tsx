@@ -19,13 +19,13 @@ export function IngredientThumb({ name }: { name: string }) {
   }
 
   return (
-    <span className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-line bg-surface p-1">
+    <span className="relative block size-11 shrink-0 overflow-hidden rounded-xl border border-line bg-surface">
       <Image
         src={getIngredientImageUrl(name, "small")}
         alt=""
-        width={36}
-        height={36}
-        className="size-9 object-contain"
+        fill
+        sizes="44px"
+        className="object-contain p-1"
         onError={() => setHidden(true)}
       />
     </span>

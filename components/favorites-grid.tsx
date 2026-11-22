@@ -26,13 +26,13 @@ export function FavoritesGrid() {
   if (favorites.length === 0) {
     return (
       <div className="mx-auto max-w-lg rounded-3xl border border-line bg-panel p-8 text-center sm:p-10">
-        <div className="mx-auto mb-4 flex size-20 items-center justify-center rounded-full border border-line bg-surface">
+        <div className="relative mx-auto mb-4 size-20 overflow-hidden rounded-full border border-line bg-surface">
           <Image
             src="/icons/icon-128x128.png"
             alt=""
-            width={64}
-            height={64}
-            className="size-16 object-contain"
+            fill
+            sizes="80px"
+            className="object-contain p-2"
           />
         </div>
         <h2 className="font-display text-xl font-bold text-text">

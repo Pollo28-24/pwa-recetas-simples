@@ -5,13 +5,15 @@ export function Footer() {
     <footer className="mt-16 border-t border-line bg-panel py-8 text-[13px] text-muted">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
-          <Image
-            src="/icons/icon-72x72.png"
-            alt=""
-            width={28}
-            height={28}
-            className="size-7 rounded-full border border-line bg-surface object-contain"
-          />
+          <span className="relative block size-7 shrink-0 overflow-hidden rounded-full border border-line bg-surface">
+            <Image
+              src="/icons/icon-72x72.png"
+              alt=""
+              fill
+              sizes="28px"
+              className="object-contain"
+            />
+          </span>
           <p>
             Recetario PWA · Datos e imágenes proporcionados por{" "}
             <a
