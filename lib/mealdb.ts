@@ -182,10 +182,22 @@ export async function getCategories(): Promise<CategoryInfo[]> {
 }
 
 /**
- * Queries list.php?a=list and intersects against the populated catalog areas
- * so empty country entries are not presented as broken filter options.
+ * Queries list.php?a=list and merges with populated catalog areas so every
+ * cuisine present in the catalog (including countries like Argentina, France,
+ * India, or United States that list.php?a=list omits) appears without empty entries.
  */
 export async function getAreas(activeCatalog?: MealSummary[]): Promise<string[]> {
+  if (activeCatalog && activeCatalog.length > 0) {
+    const populated = new Set(
+      activeCatalog
+        .map((meal) => (meal.strArea ?? "").trim())
+        .filter(Boolean),
+    );
+    if (populated.size > 0) {
+      return [...populated].sort((a, b) => a.localeCompare(b, "es"));
+    }
+  }
+
   const res = await fetchMealDbJson<{ meals?: Array<{ strArea?: string | null }> | null }>(
     "/list.php?a=list",
   );
@@ -197,19 +209,7 @@ export async function getAreas(activeCatalog?: MealSummary[]): Promise<string[]>
           .filter(Boolean)
       : [];
 
-  if (!activeCatalog || activeCatalog.length === 0) {
-    return [...new Set(apiAreas)].sort((a, b) => a.localeCompare(b, "es"));
-  }
-
-  const populated = new Set(
-    activeCatalog
-      .map((meal) => (meal.strArea ?? "").trim())
-      .filter(Boolean),
-  );
-
-  const valid = apiAreas.filter((area) => populated.has(area));
-  const merged = valid.length > 0 ? valid : [...populated];
-  return [...new Set(merged)].sort((a, b) => a.localeCompare(b, "es"));
+  return [...new Set(apiAreas)].sort((a, b) => a.localeCompare(b, "es"));
 }
 
 export async function getIngredientNames(): Promise<string[]> {
