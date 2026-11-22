@@ -7,10 +7,25 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Identificador de receta inválido." }, { status: 400 });
   }
 
-  const meal = await getMealById(id);
-  if (!meal) {
-    return NextResponse.json({ error: "Receta no encontrada." }, { status: 404 });
-  }
+  try {
+    const meal = await getMealById(id);
+    if (!meal) {
+      return NextResponse.json({ error: "Receta no encontrada." }, { status: 404 });
+    }
 
-  return NextResponse.json({ meal });
+    return NextResponse.json(
+      { meal },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+        },
+      },
+    );
+  } catch (error) {
+    console.error("Error consultando /api/meals/lookup:", error);
+    return NextResponse.json(
+      { error: "No pudimos consultar la receta ahora." },
+      { status: 502 },
+    );
+  }
 }

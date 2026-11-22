@@ -213,7 +213,7 @@ export function RecipeExplorer({
                     setQuery(event.target.value);
                     setVisible(PAGE_SIZE);
                   }}
-                  placeholder="Buscar por plato, categoría o cocina…"
+                  placeholder="Buscar receta o cocina…"
                   autoComplete="off"
                   className="min-h-12 w-full rounded-2xl border border-line-strong bg-surface py-2.5 pl-12 pr-10 text-base text-text outline-none transition-colors duration-150 placeholder:text-muted focus:border-accent"
                 />
@@ -253,7 +253,7 @@ export function RecipeExplorer({
                     setArea(event.target.value);
                     setVisible(PAGE_SIZE);
                   }}
-                  className="min-h-12 w-full rounded-2xl border border-line-strong bg-surface px-4 py-2.5 text-sm font-semibold text-text outline-none transition-colors duration-150 focus:border-accent"
+                  className="min-h-12 w-full cursor-pointer rounded-2xl border border-line-strong bg-surface px-4 py-2.5 text-sm font-semibold text-text outline-none transition-colors duration-150 focus:border-accent"
                 >
                   <option value={ALL_VALUE}>Cocina: Todas ({areas.length})</option>
                   {areas.map((item) => (
@@ -275,7 +275,7 @@ export function RecipeExplorer({
                     setIngredient(event.target.value);
                     setVisible(PAGE_SIZE);
                   }}
-                  className="min-h-12 w-full rounded-2xl border border-line-strong bg-surface px-4 py-2.5 text-sm font-semibold text-text outline-none transition-colors duration-150 focus:border-accent"
+                  className="min-h-12 w-full cursor-pointer rounded-2xl border border-line-strong bg-surface px-4 py-2.5 text-sm font-semibold text-text outline-none transition-colors duration-150 focus:border-accent"
                 >
                   <option value="">Ingrediente: Cualquiera</option>
                   {ingredientNames.map((item) => (
@@ -292,9 +292,9 @@ export function RecipeExplorer({
         {spotlightMeal ? (
           <aside
             aria-label="Sugerencia del chef"
-            className="motion-panel flex flex-col justify-between overflow-hidden rounded-3xl border border-line bg-surface p-4 lg:col-span-4"
+            className="motion-panel flex flex-col justify-between gap-4 overflow-hidden rounded-3xl border border-line bg-surface p-5 lg:col-span-4"
           >
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center justify-between gap-3">
               <span className="inline-flex items-center rounded-full bg-sun px-3 py-1 text-[13px] font-bold text-text">
                 Sugerencia del chef
               </span>
@@ -302,7 +302,7 @@ export function RecipeExplorer({
                 type="button"
                 onClick={handleRandomMeal}
                 disabled={randomLoading}
-                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-line-strong bg-panel px-3 py-1.5 text-[13px] font-semibold text-text transition-all duration-150 hover:bg-sun active:scale-[0.97] disabled:opacity-60"
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-line-strong bg-panel px-3.5 py-1.5 text-[13px] font-semibold text-text transition-all duration-150 hover:bg-sun active:scale-[0.97] disabled:opacity-60"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -329,7 +329,7 @@ export function RecipeExplorer({
 
             <Link
               href={`/receta/${spotlightMeal.idMeal}`}
-              className="group mt-3 flex flex-1 flex-col justify-between gap-3"
+              className="group flex flex-1 flex-col justify-between gap-4"
             >
               <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-panel">
                 <Image
@@ -342,19 +342,19 @@ export function RecipeExplorer({
                 />
               </div>
 
-              <div className="flex items-end justify-between gap-3">
+              <div className="flex items-center justify-between gap-4 pt-0.5">
                 <div className="min-w-0">
                   <p className="truncate text-[13px] font-medium text-muted">
                     {[spotlightMeal.strCategory, spotlightMeal.strArea]
                       .filter(Boolean)
                       .join(" · ") || "Plato recomendado"}
                   </p>
-                  <h2 className="mt-0.5 line-clamp-1 font-display text-lg font-bold text-text transition-colors duration-150 group-hover:text-accent">
+                  <h2 className="mt-1 line-clamp-1 font-display text-lg font-bold text-text transition-colors duration-150 group-hover:text-accent">
                     {spotlightMeal.strMeal}
                   </h2>
                 </div>
 
-                <span className="inline-flex min-h-10 shrink-0 items-center gap-1 rounded-xl bg-accent px-3.5 py-2 text-[13px] font-semibold text-white transition-colors duration-150 group-hover:bg-accent-hover">
+                <span className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-accent px-4 py-2 text-[13px] font-semibold text-white transition-colors duration-150 group-hover:bg-accent-hover">
                   <span>Cocinar</span>
                   <svg
                     viewBox="0 0 24 24"
@@ -396,7 +396,7 @@ export function RecipeExplorer({
       ) : null}
 
       <section aria-label="Categorías culinarias">
-        <div className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0">
+        <div className="flex gap-2.5 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0">
           <button
             type="button"
             onClick={() => {
@@ -427,7 +427,7 @@ export function RecipeExplorer({
                 }}
                 aria-pressed={active}
                 className={[
-                  "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold transition-all duration-150 active:scale-[0.97]",
+                  "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition-all duration-150 active:scale-[0.97]",
                   active
                     ? "border-text bg-sun text-text shadow-xs"
                     : "border-line bg-surface text-muted hover:border-line-strong hover:text-text",
@@ -449,7 +449,7 @@ export function RecipeExplorer({
         </div>
 
         {activeCategoryInfo?.strCategoryDescription ? (
-          <div className="motion-panel mt-3 flex items-start gap-3.5 rounded-2xl border border-line bg-surface p-4 text-[13px] leading-relaxed text-muted">
+          <div className="motion-panel mt-4 flex items-start gap-4 rounded-2xl border border-line bg-surface p-4 sm:p-5 text-[13px] leading-relaxed text-muted">
             <div className="relative size-12 shrink-0 overflow-hidden rounded-xl bg-panel">
               <Image
                 src={activeCategoryInfo.strCategoryThumb}
@@ -509,7 +509,7 @@ export function RecipeExplorer({
       {shown.length > 0 ? (
         <div
           key={`${category}-${area}-${ingredient}-${query}`}
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
         >
           {shown.map((meal, index) => (
             <MealCard

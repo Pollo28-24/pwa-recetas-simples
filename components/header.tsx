@@ -38,9 +38,9 @@ export function Header() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-1.5 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <InstallButton />
-          <nav aria-label="Navegación principal" className="flex items-center gap-1 sm:gap-1.5">
+          <nav aria-label="Navegación principal" className="flex items-center gap-1.5 sm:gap-2">
             {links.map((link) => {
               const active =
                 link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -51,7 +51,7 @@ export function Header() {
                   href={link.href}
                   aria-current={active ? "page" : undefined}
                   className={[
-                    "inline-flex min-h-10 items-center gap-1.5 rounded-xl px-2.5 py-2 text-[13px] font-semibold transition-colors duration-150 active:scale-[0.985] sm:min-h-11 sm:gap-2 sm:px-3.5 sm:text-sm",
+                    "inline-flex min-h-11 items-center gap-1.5 rounded-xl px-3 py-2 text-[13px] font-semibold transition-colors duration-150 active:scale-[0.985] sm:gap-2 sm:px-3.5 sm:text-sm",
                     active
                       ? "bg-accent text-white shadow-xs hover:bg-accent-hover"
                       : "text-muted hover:bg-panel hover:text-text",

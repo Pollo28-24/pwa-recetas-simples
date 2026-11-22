@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v4";
+const CACHE_VERSION = "v5";
 const STATIC_CACHE = `recetario-static-${CACHE_VERSION}`;
 const PAGES_CACHE = `recetario-pages-${CACHE_VERSION}`;
 const MEDIA_CACHE = `recetario-media-${CACHE_VERSION}`;
@@ -124,7 +124,8 @@ self.addEventListener("fetch", (event) => {
   }
 
   const isMealDbImage =
-    url.hostname === "www.themealdb.com" && url.pathname.startsWith("/images/");
+    (url.hostname === "www.themealdb.com" && url.pathname.startsWith("/images/")) ||
+    (url.origin === self.location.origin && url.pathname === "/_next/image");
 
   if (isMealDbImage) {
     event.respondWith(cacheFirst(request, MEDIA_CACHE));

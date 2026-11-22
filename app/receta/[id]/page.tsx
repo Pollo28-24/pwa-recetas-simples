@@ -80,26 +80,26 @@ export default async function RecipePage({ params }: PageProps) {
       </Link>
 
       <article className="space-y-8">
-        <header className="motion-hero overflow-hidden rounded-3xl border border-line bg-surface">
-          <div className="grid grid-cols-1 items-stretch lg:grid-cols-2">
-            <div className="relative aspect-[4/3] overflow-hidden bg-panel lg:aspect-auto lg:min-h-[380px]">
+        <header className="motion-hero overflow-hidden rounded-3xl border border-line bg-surface p-3 sm:p-4 lg:p-5">
+          <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-12 lg:gap-8">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-panel lg:col-span-6 lg:aspect-auto lg:min-h-[400px]">
               <Image
                 src={getMealImageUrl(meal.strMealThumb, "large")}
                 alt={meal.strMeal}
                 fill
                 priority
-                sizes="(max-width: 1024px) 100vw, 560px"
+                sizes="(max-width: 1024px) 100vw, 540px"
                 className="object-cover"
               />
             </div>
 
-            <div className="flex flex-col justify-between gap-6 p-6 sm:p-8">
-              <div className="space-y-4">
-                <div className="flex flex-wrap items-center gap-2 text-[13px]">
+            <div className="flex flex-col justify-between gap-7 px-2 pb-2 pt-1 sm:px-3 sm:pb-3 lg:col-span-6 lg:px-1 lg:py-3">
+              <div className="space-y-5">
+                <div className="flex flex-wrap items-center gap-2.5 text-[13px]">
                   {meal.strCategory ? (
                     <Link
                       href={`/?categoria=${encodeURIComponent(meal.strCategory)}`}
-                      className="inline-flex min-h-9 items-center rounded-full border border-text/15 bg-sun px-3.5 py-1 font-semibold text-text transition-colors duration-150 hover:bg-sun-hover"
+                      className="inline-flex min-h-10 items-center rounded-full border border-text/15 bg-sun px-4 py-1.5 font-semibold text-text transition-colors duration-150 hover:bg-sun-hover"
                     >
                       {meal.strCategory}
                     </Link>
@@ -107,7 +107,7 @@ export default async function RecipePage({ params }: PageProps) {
                   {origin ? (
                     <Link
                       href={`/?cocina=${encodeURIComponent(origin)}`}
-                      className="inline-flex min-h-9 items-center rounded-full border border-line-strong bg-panel px-3.5 py-1 font-semibold text-text transition-colors duration-150 hover:bg-sun"
+                      className="inline-flex min-h-10 items-center rounded-full border border-line-strong bg-panel px-4 py-1.5 font-semibold text-text transition-colors duration-150 hover:bg-sun"
                     >
                       Cocina {origin}
                     </Link>
@@ -119,36 +119,36 @@ export default async function RecipePage({ params }: PageProps) {
                     {meal.strMeal}
                   </h1>
                   {meal.strMealAlternate ? (
-                    <p className="mt-1.5 text-sm text-muted">
+                    <p className="mt-2 text-sm text-muted">
                       También conocida como:{" "}
                       <strong className="text-text">{meal.strMealAlternate}</strong>
                     </p>
                   ) : null}
                 </div>
 
-                <dl className="grid grid-cols-2 gap-3 rounded-2xl border border-line bg-panel p-4">
+                <dl className="grid grid-cols-2 gap-4 rounded-2xl border border-line bg-panel p-4 sm:p-5">
                   <div>
                     <dt className="text-[13px] font-medium text-muted">Ingredientes</dt>
-                    <dd className="mt-0.5 font-display text-xl font-bold text-text tabular-nums">
+                    <dd className="mt-1 font-display text-2xl font-bold text-text tabular-nums">
                       {ingredients.length}
                     </dd>
                   </div>
                   <div>
                     <dt className="text-[13px] font-medium text-muted">Pasos</dt>
-                    <dd className="mt-0.5 font-display text-xl font-bold text-text tabular-nums">
+                    <dd className="mt-1 font-display text-2xl font-bold text-text tabular-nums">
                       {steps.length}
                     </dd>
                   </div>
                 </dl>
 
                 {tags.length > 0 ? (
-                  <div className="flex flex-wrap items-center gap-1.5 text-[13px] text-muted">
+                  <div className="flex flex-wrap items-center gap-2 text-[13px] text-muted">
                     <span>Etiquetas:</span>
                     {tags.map((tag) => (
                       <Link
                         key={tag}
                         href={`/?q=${encodeURIComponent(tag)}`}
-                        className="rounded-lg border border-line bg-panel px-2.5 py-1 font-medium text-text transition-colors duration-150 hover:bg-sun"
+                        className="rounded-lg border border-line bg-panel px-3 py-1 font-medium text-text transition-colors duration-150 hover:bg-sun"
                       >
                         {tag}
                       </Link>
@@ -157,7 +157,7 @@ export default async function RecipePage({ params }: PageProps) {
                 ) : null}
               </div>
 
-              <div className="space-y-3 border-t border-line pt-5">
+              <div className="space-y-4 border-t border-line pt-5">
                 <div className="flex flex-wrap items-center gap-3">
                   <FavoriteButton meal={toSummary(meal)} withLabel />
 
@@ -185,7 +185,7 @@ export default async function RecipePage({ params }: PageProps) {
                   ) : null}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-muted">
                   {sourceUrl ? (
                     <a
                       href={sourceUrl}
@@ -216,7 +216,7 @@ export default async function RecipePage({ params }: PageProps) {
         <div className="grid items-start gap-8 lg:grid-cols-12">
           <section
             aria-labelledby="heading-ingredientes"
-            className="motion-panel rounded-3xl border border-line bg-panel p-5 sm:p-6 lg:sticky lg:top-24 lg:col-span-5"
+            className="motion-panel rounded-3xl border border-line bg-panel p-6 sm:p-7 lg:sticky lg:top-24 lg:col-span-5"
           >
             <div className="mb-4 flex items-baseline justify-between gap-2 border-b border-line pb-3">
               <h2
@@ -234,7 +234,7 @@ export default async function RecipePage({ params }: PageProps) {
 
           <section
             aria-labelledby="heading-preparacion"
-            className="motion-panel rounded-3xl border border-line bg-surface p-5 sm:p-8 lg:col-span-7"
+            className="motion-panel rounded-3xl border border-line bg-surface p-6 sm:p-8 lg:col-span-7"
           >
             <div className="mb-5 flex items-baseline justify-between gap-2 border-b border-line pb-3">
               <h2
@@ -254,10 +254,10 @@ export default async function RecipePage({ params }: PageProps) {
 
       {relatedByCategory.length > 0 ? (
         <section className="border-t border-line pt-8">
-          <h2 className="mb-4 font-display text-xl font-bold text-text">
+          <h2 className="mb-5 font-display text-xl font-bold text-text">
             Más recetas de {meal.strCategory}
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {relatedByCategory.map((item, index) => (
               <MealCard key={item.idMeal} meal={item} index={index} />
             ))}
@@ -267,10 +267,10 @@ export default async function RecipePage({ params }: PageProps) {
 
       {relatedByArea.length > 0 && origin ? (
         <section className="border-t border-line pt-8">
-          <h2 className="mb-4 font-display text-xl font-bold text-text">
+          <h2 className="mb-5 font-display text-xl font-bold text-text">
             Más de la cocina {origin}
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {relatedByArea.map((item, index) => (
               <MealCard key={item.idMeal} meal={item} index={index} />
             ))}

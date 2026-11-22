@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function OfflinePage() {
   return (
-    <section className="mx-auto max-w-lg rounded-3xl border border-line bg-panel p-8 text-center">
-      <div className="relative mx-auto mb-4 size-20 overflow-hidden rounded-full border border-line bg-surface">
+    <section className="motion-hero mx-auto max-w-lg rounded-3xl border border-line bg-panel p-8 text-center sm:p-10">
+      <div className="relative mx-auto mb-5 size-20 overflow-hidden rounded-full border border-line bg-surface">
         <Image
           src="/icons/icon-128x128.png"
           alt=""
@@ -29,13 +29,13 @@ export default function OfflinePage() {
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Link
           href="/favoritos"
-          className="inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-hover"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-accent-hover active:scale-[0.985]"
         >
           Ver mis favoritos
         </Link>
         <Link
           href="/"
-          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line-strong bg-surface px-5 py-2.5 text-sm font-semibold text-text hover:bg-surface"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line-strong bg-surface px-5 py-2.5 text-sm font-semibold text-text transition-colors duration-150 hover:bg-panel active:scale-[0.985]"
         >
           Volver al inicio
         </Link>

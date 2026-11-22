@@ -12,12 +12,19 @@ export function FavoritesGrid() {
 
   if (!ready) {
     return (
-      <div aria-busy="true" className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div aria-busy="true" className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="h-64 animate-pulse rounded-2xl border border-line bg-panel"
-          />
+            className="overflow-hidden rounded-3xl border border-line bg-surface"
+          >
+            <div className="aspect-[4/3] animate-pulse bg-panel" />
+            <div className="space-y-2.5 p-5">
+              <div className="h-3.5 w-24 animate-pulse rounded bg-panel" />
+              <div className="h-5 w-4/5 animate-pulse rounded bg-panel" />
+              <div className="h-3.5 w-32 animate-pulse rounded bg-panel pt-2" />
+            </div>
+          </div>
         ))}
       </div>
     );
@@ -26,7 +33,7 @@ export function FavoritesGrid() {
   if (favorites.length === 0) {
     return (
       <div className="mx-auto max-w-lg rounded-3xl border border-line bg-panel p-8 text-center sm:p-10">
-        <div className="relative mx-auto mb-4 size-20 overflow-hidden rounded-full border border-line bg-surface">
+        <div className="relative mx-auto mb-5 size-20 overflow-hidden rounded-full border border-line bg-surface">
           <Image
             src="/icons/icon-128x128.png"
             alt=""
@@ -38,7 +45,7 @@ export function FavoritesGrid() {
         <h2 className="font-display text-xl font-bold text-text">
           Todavía no guardaste recetas
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted">
+        <p className="mt-2.5 text-sm leading-relaxed text-muted">
           Tocá el corazón en cualquier plato para tenerlo a mano en la cocina, incluso sin
           conexión a internet.
         </p>
@@ -65,26 +72,26 @@ export function FavoritesGrid() {
           <button
             type="button"
             onClick={() => setConfirmClear(true)}
-            className="inline-flex min-h-11 items-center rounded-xl border border-line-strong bg-surface px-3.5 py-2 text-[13px] font-semibold text-text transition-colors duration-150 hover:bg-panel"
+            className="inline-flex min-h-11 items-center rounded-xl border border-line-strong bg-surface px-4 py-2 text-[13px] font-semibold text-text transition-colors duration-150 hover:bg-panel"
           >
             Vaciar favoritos
           </button>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={() => {
                 clearFavorites();
                 setConfirmClear(false);
               }}
-              className="inline-flex min-h-11 items-center rounded-xl bg-accent px-3.5 py-2 text-[13px] font-semibold text-white hover:bg-accent-hover"
+              className="inline-flex min-h-11 items-center rounded-xl bg-accent px-4 py-2 text-[13px] font-semibold text-white hover:bg-accent-hover"
             >
               Confirmar borrado
             </button>
             <button
               type="button"
               onClick={() => setConfirmClear(false)}
-              className="inline-flex min-h-11 items-center rounded-xl border border-line bg-surface px-3.5 py-2 text-[13px] font-semibold text-muted hover:text-text"
+              className="inline-flex min-h-11 items-center rounded-xl border border-line bg-surface px-4 py-2 text-[13px] font-semibold text-muted hover:text-text"
             >
               Cancelar
             </button>
@@ -92,7 +99,7 @@ export function FavoritesGrid() {
         )}
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {favorites.map((meal, index) => (
           <MealCard key={meal.idMeal} meal={meal} index={index} />
         ))}

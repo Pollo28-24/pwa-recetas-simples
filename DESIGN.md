@@ -134,7 +134,7 @@ La paleta combina neutros cálidos de cocina con dos acentos vivos heredados del
 
 ## Layout
 
-Contenedor centrado de ancho máximo `max-w-6xl` (`1152px`) con márgenes adaptativos (`px-4` móvil, `px-6` tablet, `px-8` escritorio). Cabecera fija superior de `64px` (`h-16`), grilla responsive de recetas (`1` columna móvil, `2` tablet, `4` escritorio con `gap-4` y tarjeta destacada en primera fila), y ficha de receta organizada en cabecera superior partida (`6 / 6`) más libro abierto inferior de ingredientes fijos (`5 / 12`) y preparación editorial (`7 / 12`).
+Contenedor centrado de ancho máximo `max-w-6xl` (`1152px`) con márgenes adaptativos (`px-4` móvil, `px-6` tablet, `px-8` escritorio). Cabecera fija superior de `64px` (`h-16`), grilla responsive de recetas (`1` columna móvil, `2` tablet, `4` escritorio con `gap-5` y tarjeta destacada en primera fila con marco interior y botón favorito despejado), y ficha de receta organizada en cabecera superior enmarcada (`6 / 6` en escritorio con foto contenida y aire alrededor de acciones) más libro abierto inferior de ingredientes fijos (`5 / 12`) y preparación editorial (`7 / 12`).
 
 ## Elevation & Depth
 

@@ -14,26 +14,38 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get("c")?.trim() ?? "";
   const search = searchParams.get("s")?.trim() ?? "";
 
-  if (ingredient) {
-    const catalog = await getAllMeals();
-    const byId = new Map(catalog.map((meal) => [meal.idMeal, meal]));
-    const meals = await getMealsByIngredient(ingredient, byId);
-    return NextResponse.json({ meals });
-  }
+  const cacheHeaders = {
+    "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+  };
 
-  if (area) {
-    const meals = await getMealsByArea(area, "", 100);
-    return NextResponse.json({ meals });
-  }
+  try {
+    if (ingredient) {
+      const catalog = await getAllMeals();
+      const byId = new Map(catalog.map((meal) => [meal.idMeal, meal]));
+      const meals = await getMealsByIngredient(ingredient, byId);
+      return NextResponse.json({ meals }, { headers: cacheHeaders });
+    }
 
-  if (category) {
-    const meals = await getMealsByCategory(category, "", 100);
-    return NextResponse.json({ meals });
-  }
+    if (area) {
+      const meals = await getMealsByArea(area, "", 100);
+      return NextResponse.json({ meals }, { headers: cacheHeaders });
+    }
 
-  if (search) {
-    const meals = await searchMealsByName(search);
-    return NextResponse.json({ meals });
+    if (category) {
+      const meals = await getMealsByCategory(category, "", 100);
+      return NextResponse.json({ meals }, { headers: cacheHeaders });
+    }
+
+    if (search) {
+      const meals = await searchMealsByName(search);
+      return NextResponse.json({ meals }, { headers: cacheHeaders });
+    }
+  } catch (error) {
+    console.error("Error consultando /api/meals/filter:", error);
+    return NextResponse.json(
+      { error: "No pudimos consultar el catálogo externo ahora." },
+      { status: 502 },
+    );
   }
 
   return NextResponse.json(

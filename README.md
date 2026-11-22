@@ -35,6 +35,19 @@ npm run build      # Compilación de producción
 npm run start      # Servidor de producción
 ```
 
+## Despliegue en Vercel
+
+El proyecto está listo para desplegarse directamente desde GitHub en Vercel sin variables de entorno obligatorias:
+
+- `vercel.json`: define `framework: "nextjs"`, `fluid: true`, cabeceras `Cache-Control: public, max-age=0, must-revalidate` + `Service-Worker-Allowed: /` para `/sw.js` y `/manifest.webmanifest`, además de cabeceras básicas de seguridad.
+- `next.config.ts`: habilita `image/avif` y `image/webp` con `minimumCacheTTL` de 30 días para las imágenes de `www.themealdb.com`, evitando transformaciones redundantes.
+- `app/api/meals/*`: ejecuta en Node.js con cabeceras CDN `s-maxage=3600, stale-while-revalidate=86400` en `/api/meals/filter` y `/api/meals/lookup`, y `no-store` en `/api/meals/random`.
+- `app/layout.tsx`: configura `metadataBase` automático con `VERCEL_PROJECT_PRODUCTION_URL` / `VERCEL_URL`.
+
+Pasos para publicar:
+1. Importar el repositorio `Pollo28-24/pwa-recetas-simples` en [vercel.com/new](https://vercel.com/new) (detecta Next.js automáticamente).
+2. Hacer clic en **Deploy** (o ejecutar `vercel --prod` desde Vercel CLI tras autenticarse).
+
 ## Atribución
 
 Datos e imágenes de recetas proporcionados por [TheMealDB](https://www.themealdb.com/) (revisar sus [términos de uso](https://www.themealdb.com/terms_of_use.php) para publicación comercial o tiendas de aplicaciones).
