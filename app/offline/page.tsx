@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -8,23 +9,33 @@ export const metadata: Metadata = {
 
 export default function OfflinePage() {
   return (
-    <section className="mx-auto max-w-xl rounded-xl border border-line bg-panel p-8 text-center">
-      <h1 className="text-2xl font-bold">Estás sin conexión a internet</h1>
-      <p className="mt-3 text-sm leading-relaxed text-muted">
-        No pudimos cargar esta receta porque todavía no estaba guardada en la caché de tu
-        dispositivo. Podés abrir tus recetas favoritas guardadas o reintentar al volver a
-        conectarte.
+    <section className="mx-auto max-w-lg rounded-3xl border border-line bg-panel p-8 text-center">
+      <div className="mx-auto mb-4 flex size-20 items-center justify-center rounded-full border border-line bg-surface">
+        <Image
+          src="/icons/icon-128x128.png"
+          alt=""
+          width={64}
+          height={64}
+          className="size-16 object-contain"
+        />
+      </div>
+      <h1 className="font-display text-2xl font-bold text-text">
+        Estás sin conexión a internet
+      </h1>
+      <p className="mt-2.5 text-sm leading-relaxed text-muted">
+        No pudimos cargar esta receta porque todavía no estaba guardada en tu dispositivo. Podés
+        abrir tus recetas favoritas o volver cuando recuperes señal.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Link
           href="/favoritos"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-night"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-hover"
         >
           Ver mis favoritos
         </Link>
         <Link
           href="/"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg border border-line px-5 py-2.5 text-sm font-semibold"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line-strong bg-surface px-5 py-2.5 text-sm font-semibold text-text hover:bg-surface"
         >
           Volver al inicio
         </Link>

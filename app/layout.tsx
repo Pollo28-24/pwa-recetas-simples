@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Open_Sans } from "next/font/google";
+import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import { FavoritesProvider } from "@/components/favorites-provider";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
@@ -7,11 +7,18 @@ import { OfflineBanner } from "@/components/offline-banner";
 import { PwaRegister } from "@/components/pwa-register";
 import "./globals.css";
 
-const openSans = Open_Sans({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  style: ["normal", "italic"],
+  weight: ["500", "600", "700"],
   display: "swap",
-  variable: "--font-open-sans",
+  variable: "--font-bricolage",
+});
+
+const figtree = Figtree({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-figtree",
 });
 
 export const metadata: Metadata = {
@@ -19,7 +26,8 @@ export const metadata: Metadata = {
     default: "Recetario",
     template: "%s · Recetario",
   },
-  description: "Recetas de TheMealDB con buscador, filtros y favoritos offline.",
+  description:
+    "Explora 790 recetas de TheMealDB por categoría, cocina o ingrediente y guárdalas sin conexión.",
   applicationName: "Recetario",
   manifest: "/manifest.webmanifest",
   icons: {
@@ -45,18 +53,21 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={openSans.variable}>
-      <body>
+    <html lang="es" className={`${bricolage.variable} ${figtree.variable}`}>
+      <body className="flex min-h-dvh flex-col bg-canvas text-text">
         <a
           href="#contenido-principal"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-night"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-sun focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-text focus:shadow-md"
         >
           Saltar al contenido
         </a>
         <FavoritesProvider>
           <Header />
           <OfflineBanner />
-          <main id="contenido-principal" className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+          <main
+            id="contenido-principal"
+            className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
+          >
             {children}
           </main>
           <Footer />

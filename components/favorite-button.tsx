@@ -24,19 +24,19 @@ export function FavoriteButton({ meal, withLabel = false, className = "" }: Favo
           : `Guardar ${meal.strMeal} en favoritos`
       }
       className={[
-        "inline-flex items-center justify-center gap-2 border",
-        withLabel
-          ? "rounded-md px-4 py-2 text-sm font-semibold"
-          : "size-9 rounded-full bg-night",
+        "inline-flex min-h-11 items-center justify-center gap-2 border font-semibold transition-all duration-150 active:scale-[0.985]",
+        withLabel ? "rounded-xl px-4 py-2.5 text-sm" : "size-11 rounded-full shadow-sm",
         active
-          ? "border-accent text-accent"
-          : "border-line text-muted hover:text-text",
+          ? "border-accent bg-accent text-white hover:bg-accent-hover"
+          : withLabel
+            ? "border-line-strong bg-surface text-text hover:bg-panel"
+            : "border-line bg-surface/95 text-text hover:border-accent hover:text-accent",
         className,
       ].join(" ")}
     >
-      <HeartIcon filled={active} className={withLabel ? "size-5" : "size-[18px]"} />
+      <HeartIcon filled={active} className="size-5 shrink-0" />
       {withLabel ? (
-        <span>{active ? "En favoritos" : "Guardar en favoritos"}</span>
+        <span>{active ? "Guardada en favoritos" : "Guardar en favoritos"}</span>
       ) : null}
     </button>
   );
@@ -50,7 +50,7 @@ function HeartIcon({ filled, className }: { filled: boolean; className?: string 
       className={className}
       fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
-      strokeWidth={1.8}
+      strokeWidth={1.9}
       strokeLinecap="round"
       strokeLinejoin="round"
     >

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { FavoriteButton } from "@/components/favorite-button";
 import { IngredientsList } from "@/components/ingredients-list";
 import { MealCard } from "@/components/meal-card";
+import { RecipeSteps } from "@/components/recipe-steps";
 import {
   getIngredients,
   getMealById,
@@ -58,29 +59,44 @@ export default async function RecipePage({ params }: PageProps) {
     .slice(0, 4);
 
   return (
-    <>
-      <Link href="/" className="text-sm font-medium text-muted underline underline-offset-4">
-        Volver a las recetas
+    <div className="space-y-10">
+      <Link
+        href="/"
+        className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-muted underline hover:text-text"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="size-4"
+        >
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+        <span>Volver a las recetas</span>
       </Link>
 
-      <article className="mt-6 grid gap-8 lg:grid-cols-2">
-        <div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-line bg-panel">
+      <article className="grid items-start gap-8 lg:grid-cols-12">
+        <div className="space-y-4 lg:sticky lg:top-24 lg:col-span-5">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line bg-panel shadow-sm">
             <Image
               src={getMealImageUrl(meal.strMealThumb, "large")}
               alt={meal.strMeal}
               fill
               priority
-              sizes="(max-width: 1024px) 100vw, 540px"
+              sizes="(max-width: 1024px) 100vw, 480px"
               className="object-cover"
             />
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-2 text-xs">
+          <div className="flex flex-wrap gap-2 text-[13px]">
             {meal.strCategory ? (
               <Link
                 href={`/?categoria=${encodeURIComponent(meal.strCategory)}`}
-                className="rounded-md border border-line px-2.5 py-1 font-medium text-muted hover:text-text"
+                className="inline-flex min-h-9 items-center rounded-xl border border-text/15 bg-sun px-3 py-1 font-semibold text-text transition-colors duration-150 hover:bg-sun-hover"
               >
                 {meal.strCategory}
               </Link>
@@ -88,97 +104,119 @@ export default async function RecipePage({ params }: PageProps) {
             {origin ? (
               <Link
                 href={`/?cocina=${encodeURIComponent(origin)}`}
-                className="rounded-md border border-line px-2.5 py-1 font-medium text-muted hover:text-text"
+                className="inline-flex min-h-9 items-center rounded-xl border border-line-strong bg-surface px-3 py-1 font-semibold text-text transition-colors duration-150 hover:bg-panel"
               >
-                Cocina: {origin}
+                Cocina {origin}
               </Link>
             ) : null}
           </div>
-        </div>
-
-        <div>
-          <h1 className="text-3xl font-bold">{meal.strMeal}</h1>
-          {meal.strMealAlternate ? (
-            <p className="mt-1 text-sm text-muted">
-              También conocida como: {meal.strMealAlternate}
-            </p>
-          ) : null}
-
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <FavoriteButton meal={toSummary(meal)} withLabel />
-            {youtubeUrl ? (
-              <a
-                href={youtubeUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-10 items-center rounded-md border border-line px-4 py-2 text-sm font-medium"
-              >
-                Ver vídeo
-              </a>
-            ) : null}
-            {sourceUrl ? (
-              <a
-                href={sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-10 items-center rounded-md border border-line px-4 py-2 text-sm font-medium"
-              >
-                Fuente original
-              </a>
-            ) : null}
-            <a
-              href={themealdbUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-10 items-center rounded-md border border-line px-4 py-2 text-sm font-medium"
-            >
-              Ver en TheMealDB
-            </a>
-          </div>
 
           {tags.length > 0 ? (
-            <div className="mt-4 flex flex-wrap items-center gap-1.5 text-xs text-muted">
+            <div className="flex flex-wrap items-center gap-1.5 text-[13px] text-muted">
               <span>Etiquetas:</span>
               {tags.map((tag) => (
                 <Link
                   key={tag}
                   href={`/?q=${encodeURIComponent(tag)}`}
-                  className="rounded border border-line px-2 py-0.5 hover:text-text"
+                  className="rounded-lg border border-line bg-surface px-2.5 py-1 font-medium text-text hover:bg-panel"
                 >
                   {tag}
                 </Link>
               ))}
             </div>
           ) : null}
+        </div>
 
-          {meal.dateModified ? (
-            <p className="mt-2 text-xs text-muted">
-              Última actualización: {meal.dateModified}
-            </p>
-          ) : null}
+        <div className="space-y-8 lg:col-span-7">
+          <div>
+            <h1 className="font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
+              {meal.strMeal}
+            </h1>
+            {meal.strMealAlternate ? (
+              <p className="mt-1.5 text-sm text-muted">
+                También conocida como: <strong className="text-text">{meal.strMealAlternate}</strong>
+              </p>
+            ) : null}
 
-          <section className="mt-8">
-            <h2 className="border-b border-line pb-2 text-xl font-bold">Ingredientes</h2>
+            <div className="mt-5 flex flex-wrap items-center gap-2.5">
+              <FavoriteButton meal={toSummary(meal)} withLabel />
+
+              {youtubeUrl ? (
+                <a
+                  href={youtubeUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-line-strong bg-surface px-4 py-2.5 text-sm font-semibold text-text transition-colors duration-150 hover:bg-panel"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.9}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="size-4"
+                  >
+                    <polygon points="6 3 20 12 6 21 6 3" />
+                  </svg>
+                  <span>Ver vídeo</span>
+                </a>
+              ) : null}
+
+              {sourceUrl ? (
+                <a
+                  href={sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-11 items-center rounded-xl border border-line-strong bg-surface px-4 py-2.5 text-sm font-semibold text-text transition-colors duration-150 hover:bg-panel"
+                >
+                  Fuente original
+                </a>
+              ) : null}
+
+              <a
+                href={themealdbUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-2.5 text-[13px] font-semibold text-muted transition-colors duration-150 hover:text-text"
+              >
+                Ficha en TheMealDB
+              </a>
+            </div>
+
+            {meal.dateModified ? (
+              <p className="mt-3 text-[13px] text-muted">
+                Actualizada en TheMealDB: {meal.dateModified}
+              </p>
+            ) : null}
+          </div>
+
+          <section aria-labelledby="heading-ingredientes">
+            <h2
+              id="heading-ingredientes"
+              className="mb-3 font-display text-xl font-bold text-text"
+            >
+              Ingredientes ({ingredients.length})
+            </h2>
             <IngredientsList mealId={meal.idMeal} ingredients={ingredients} />
           </section>
 
-          <section className="mt-8">
-            <h2 className="border-b border-line pb-2 text-xl font-bold">Preparación</h2>
-            <ol className="mt-4 space-y-3">
-              {steps.map((step, index) => (
-                <li key={index} className="flex gap-3 text-sm leading-relaxed">
-                  <span className="font-bold tabular-nums text-accent">{index + 1}.</span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
+          <section aria-labelledby="heading-preparacion">
+            <h2
+              id="heading-preparacion"
+              className="mb-3 font-display text-xl font-bold text-text"
+            >
+              Preparación paso a paso
+            </h2>
+            <RecipeSteps mealId={meal.idMeal} steps={steps} />
           </section>
         </div>
       </article>
 
       {relatedByCategory.length > 0 ? (
-        <section className="mt-12 border-t border-line pt-6">
-          <h2 className="mb-4 text-xl font-bold">
+        <section className="border-t border-line pt-8">
+          <h2 className="mb-4 font-display text-xl font-bold text-text">
             Más recetas de {meal.strCategory}
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -190,8 +228,10 @@ export default async function RecipePage({ params }: PageProps) {
       ) : null}
 
       {relatedByArea.length > 0 && origin ? (
-        <section className="mt-10 border-t border-line pt-6">
-          <h2 className="mb-4 text-xl font-bold">Más de la cocina {origin}</h2>
+        <section className="border-t border-line pt-8">
+          <h2 className="mb-4 font-display text-xl font-bold text-text">
+            Más de la cocina {origin}
+          </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {relatedByArea.map((item) => (
               <MealCard key={item.idMeal} meal={item} />
@@ -199,6 +239,6 @@ export default async function RecipePage({ params }: PageProps) {
           </div>
         </section>
       ) : null}
-    </>
+    </div>
   );
 }

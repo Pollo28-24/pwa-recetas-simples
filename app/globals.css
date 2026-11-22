@@ -1,36 +1,96 @@
 @import "tailwindcss";
 
 @theme {
-  --color-night: #0d1117;
-  --color-panel: #161b22;
-  --color-line: #30363d;
-  --color-text: #e6edf3;
-  --color-muted: #8b949e;
-  --color-accent: #ff6b45;
+  --color-canvas: #FFFDF7;
+  --color-surface: #FFFFFF;
+  --color-panel: #FFF8E6;
+  --color-line: #EADFD2;
+  --color-line-strong: #D3C1AF;
+  --color-text: #2B0000;
+  --color-muted: #6B4E47;
+  --color-accent: #CA2F35;
+  --color-accent-hover: #AD2329;
+  --color-accent-soft: #FDECEB;
+  --color-accent-ink: #9E1F24;
+  --color-sun: #FED84F;
+  --color-sun-hover: #F5CA32;
+  --color-success: #15803D;
+  --color-success-soft: #ECFDF3;
+  --color-success-ink: #166534;
 
-  --font-sans: var(--font-open-sans), Arial, sans-serif;
-  --font-display: var(--font-open-sans), Arial, sans-serif;
+  --font-sans: var(--font-figtree), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-figtree), system-ui, sans-serif;
 }
 
 @layer base {
   html {
-    background-color: var(--color-night);
+    background-color: var(--color-canvas);
+    color: var(--color-text);
+    color-scheme: light;
+    scrollbar-color: var(--color-line-strong) var(--color-canvas);
   }
 
   body {
-    background-color: var(--color-night);
+    min-height: 100dvh;
+    background-color: var(--color-canvas);
     color: var(--color-text);
     font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    caret-color: var(--color-accent);
     -webkit-font-smoothing: antialiased;
   }
 
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    color: var(--color-text);
+    letter-spacing: -0.025em;
+  }
+
   ::selection {
-    background-color: var(--color-accent);
-    color: var(--color-night);
+    background-color: var(--color-sun);
+    color: var(--color-text);
   }
 
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+  }
+
+  a {
+    text-underline-offset: 3px;
+  }
+}
+
+/* Custom subtle scrollbars aligned with the warm daylight palette */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-line-strong);
+  border-radius: 9999px;
+  border: 2px solid var(--color-canvas);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

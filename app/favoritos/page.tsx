@@ -3,14 +3,21 @@ import { FavoritesGrid } from "@/components/favorites-grid";
 
 export const metadata: Metadata = {
   title: "Favoritos",
-  description: "Recetas guardadas.",
+  description: "Tus recetas guardadas para consultar en la cocina, incluso sin conexión.",
 };
 
 export default function FavoritesPage() {
   return (
-    <>
-      <h1 className="mb-6 text-2xl font-bold">Favoritos</h1>
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-display text-2xl font-bold text-text sm:text-3xl">
+          Tus recetas favoritas
+        </h1>
+        <p className="mt-1 text-sm text-muted">
+          Se guardan en tu dispositivo y se pre-cachean para que puedas cocinarlas sin red.
+        </p>
+      </div>
       <FavoritesGrid />
-    </>
+    </div>
   );
 }

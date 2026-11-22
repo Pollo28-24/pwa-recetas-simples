@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-22T18:14:00Z",
+  "title": "Design System: Recetario — Cocina Simple",
+  "extensions": {
+    "colorMeta": {
+      "canvas-porcelain": {
+        "role": "neutral",
+        "displayName": "Porcelana Cálida",
+        "canonical": "#FFFDF7",
+        "tonalRamp": ["#2B0000", "#6B4E47", "#A38A7E", "#D3C1AF", "#EADFD2", "#FFF8E6", "#FFFDF7", "#FFFFFF"]
+      },
+      "primary-tomato": {
+        "role": "primary",
+        "displayName": "Rojo Tomate Vivo",
+        "canonical": "#CA2F35",
+        "tonalRamp": ["#4A0B0E", "#751419", "#9E1F24", "#AD2329", "#CA2F35", "#E45B56", "#F7B5B2", "#FDECEB"]
+      },
+      "secondary-saffron": {
+        "role": "secondary",
+        "displayName": "Amarillo Sol del Chef",
+        "canonical": "#FED84F",
+        "tonalRamp": ["#423000", "#735400", "#A67B00", "#D19D08", "#F5CA32", "#FED84F", "#FEE98D", "#FFF8E6"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Bricolage Grotesque",
+        "purpose": "Titulares de explorador, ficha de receta y marca"
+      },
+      "body": {
+        "displayName": "Figtree",
+        "purpose": "Lectura de ingredientes, pasos, filtros y tarjetas"
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-hover",
+        "value": "0 12px 28px -14px rgba(43, 0, 0, 0.18)",
+        "purpose": "Elevación sutil solo al pasar el cursor sobre tarjetas linkeadas"
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-ui",
+        "value": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "purpose": "Transiciones rápidas de 150ms en botones, chips y tarjetas"
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal de receta aleatoria y confirmación.",
+      "html": "<button class=\"ds-btn-primary\">¿Qué cocino hoy?</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 12px 20px; border: 0; border-radius: 12px; background: #CA2F35; color: #FFFFFF; font-family: var(--font-figtree, sans-serif); font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 150ms cubic-bezier(0.2,0.8,0.2,1), transform 90ms ease-out; } .ds-btn-primary:hover { background: #AD2329; } .ds-btn-primary:active { transform: scale(0.985); } .ds-btn-primary:focus-visible { outline: 2px solid #CA2F35; outline-offset: 2px; }"
+    },
+    {
+      "name": "Selected Category Chip",
+      "kind": "chip",
+      "refersTo": "chip-selected",
+      "description": "Chip de categoría activo con tinta espresso sobre amarillo sol.",
+      "html": "<button class=\"ds-chip-active\" aria-pressed=\"true\">Seafood</button>",
+      "css": ".ds-chip-active { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; border: 1px solid #2B0000; border-radius: 12px; background: #FED84F; color: #2B0000; font-family: var(--font-figtree, sans-serif); font-size: 13px; font-weight: 600; cursor: pointer; } .ds-chip-active:focus-visible { outline: 2px solid #CA2F35; outline-offset: 2px; }"
+    },
+    {
+      "name": "Recipe Card",
+      "kind": "card",
+      "refersTo": "card-recipe",
+      "description": "Tarjeta de receta en grilla con elevación sutil al hover.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-meta\"><span>Seafood</span> · <span>British</span></div><h3 class=\"ds-card-title\">Fish pie</h3></article>",
+      "css": ".ds-card { border: 1px solid #EADFD2; border-radius: 16px; background: #FFFFFF; padding: 16px; color: #2B0000; transition: transform 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out; } .ds-card:hover { transform: translateY(-2px); border-color: #D3C1AF; box-shadow: 0 12px 28px -14px rgba(43,0,0,0.18); } .ds-card-meta { font-size: 13px; color: #6B4E47; } .ds-card-title { margin-top: 8px; font-size: 16px; font-weight: 600; color: #2B0000; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La Libreta de Cocina Soleada",
+    "overview": "El sistema traslada los colores exactos del ícono chef_gorro_blanco a una aplicación web diurna de alta legibilidad diseñada para usarse en la cocina con luz natural o interior. Rechaza los fondos oscuros técnicos y los relatos interminables antes de la receta, poniendo fotografía nítida, controles táctiles amplios y jerarquía directa entre búsqueda, filtros y preparación paso a paso.",
+    "keyCharacteristics": [
+      "Fondos luminosos de papel cálido (#FFFDF7) y mesada soleada (#FFF8E6) con tarjetas blancas (#FFFFFF).",
+      "Contraste tipográfico alto (18.72:1) mediante tinta marrón espresso (#2B0000).",
+      "Amarillo sol (#FED84F) como fondo de selección con tinta #2B0000 (13.74:1) y rojo tomate (#CA2F35) para acciones primarias con blanco (5.29:1)."
+    ],
+    "rules": [
+      {
+        "name": "The Yellow Surface Rule",
+        "body": "El amarillo sol (#FED84F) nunca se usa como color de texto ni icono sobre blanco (1.39:1); siempre actúa como fondo de relleno con tinta espresso (#2B0000, 13.74:1) encima.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readable Floor Rule",
+        "body": "Ningún texto informativo o metadato baja de 13px (0.8125rem), evitando etiquetas microscópicas ilegibles.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Las tarjetas en reposo no llevan sombras pesadas ni bordes laterales gruesos; la jerarquía nace de la diferencia tonal entre #FFFDF7, #FFF8E6 y #FFFFFF.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do mantener todos los objetivos táctiles en al menos 44px de alto.",
+      "Do usar #CA2F35 con blanco y #FED84F con #2B0000 para garantizar contraste WCAG AA/AAA.",
+      "Do usar iconografía SVG uniforme junto a las imágenes reales de TheMealDB y chef_gorro_blanco."
+    ],
+    "donts": [
+      "Don't usar emojis como iconos de interfaz ni kickers/eyebrows encima de los titulares.",
+      "Don't colocar texto blanco ni amarillo claro sobre fondos claros.",
+      "Don't introducir animaciones de scroll o tarjetas con bordes laterales gruesos de color."
+    ]
+  }
+}

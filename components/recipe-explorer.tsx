@@ -144,224 +144,357 @@ export function RecipeExplorer({
   };
 
   return (
-    <div>
+    <div className="space-y-6">
+      <section className="rounded-3xl border border-line bg-panel p-5 sm:p-7">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-line bg-surface p-1 shadow-xs sm:size-20">
+              <Image
+                src="/icons/icon-192x192.png"
+                alt="Ilustración del chef de Recetario"
+                width={80}
+                height={80}
+                priority
+                className="size-full object-contain"
+              />
+            </div>
+
+            <div>
+              <h1 className="font-display text-2xl font-bold tracking-tight text-text sm:text-3xl">
+                Recetario para cocinar sin vueltas
+              </h1>
+              <p className="mt-1 text-sm text-muted">
+                <span className="font-semibold text-text tabular-nums">{meals.length}</span>{" "}
+                recetas en{" "}
+                <span className="font-semibold text-text tabular-nums">{categories.length}</span>{" "}
+                categorías y{" "}
+                <span className="font-semibold text-text tabular-nums">{areas.length}</span>{" "}
+                cocinas del mundo.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleRandomMeal}
+            disabled={randomLoading}
+            className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-white shadow-xs transition-colors duration-150 hover:bg-accent-hover active:scale-[0.985] disabled:opacity-60"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.9}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="size-5"
+            >
+              <path d="M16 3h5v5" />
+              <path d="M4 20 21 3" />
+              <path d="M21 16v5h-5" />
+              <path d="m15 15 6 6" />
+              <path d="m4 4 5 5" />
+            </svg>
+            <span>{randomLoading ? "Eligiendo plato…" : "¿Qué cocino hoy?"}</span>
+          </button>
+        </div>
+
+        <div className="mt-5 grid gap-3 lg:grid-cols-12">
+          <div className="relative lg:col-span-6">
+            <label htmlFor="recipe-search" className="sr-only">
+              Buscar receta, categoría o cocina
+            </label>
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.9}
+              className="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-muted"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input
+              id="recipe-search"
+              type="text"
+              inputMode="search"
+              value={query}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setVisible(PAGE_SIZE);
+              }}
+              placeholder="Buscar plato, categoría o país…"
+              autoComplete="off"
+              className="min-h-12 w-full rounded-xl border border-line-strong bg-surface py-2.5 pl-11 pr-10 text-base text-text outline-none placeholder:text-muted focus:border-accent"
+            />
+            {query ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery("");
+                  setVisible(PAGE_SIZE);
+                }}
+                aria-label="Borrar búsqueda"
+                className="absolute right-2 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-lg text-muted hover:bg-panel hover:text-text"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  className="size-4"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            ) : null}
+          </div>
+
+          <div className="lg:col-span-3">
+            <label htmlFor="area-filter" className="sr-only">
+              Filtrar por cocina o país
+            </label>
+            <select
+              id="area-filter"
+              value={area}
+              onChange={(event) => {
+                setArea(event.target.value);
+                setVisible(PAGE_SIZE);
+              }}
+              className="min-h-12 w-full rounded-xl border border-line-strong bg-surface px-3.5 py-2.5 text-sm font-medium text-text outline-none focus:border-accent"
+            >
+              <option value={ALL_VALUE}>Cocina: Todas ({areas.length})</option>
+              {areas.map((item) => (
+                <option key={item} value={item}>
+                  Cocina: {item}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="lg:col-span-3">
+            <label htmlFor="ingredient-filter" className="sr-only">
+              Filtrar por ingrediente principal
+            </label>
+            <select
+              id="ingredient-filter"
+              value={ingredient}
+              onChange={(event) => {
+                setIngredient(event.target.value);
+                setVisible(PAGE_SIZE);
+              }}
+              className="min-h-12 w-full rounded-xl border border-line-strong bg-surface px-3.5 py-2.5 text-sm font-medium text-text outline-none focus:border-accent"
+            >
+              <option value="">Ingrediente: Cualquiera</option>
+              {ingredientNames.map((item) => (
+                <option key={item} value={item}>
+                  Con {item}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </section>
+
       {partialCatalog ? (
         <p
           role="status"
-          className="mb-4 rounded-lg border border-line bg-panel px-4 py-3 text-xs text-muted"
+          className="rounded-2xl border border-line bg-panel px-4 py-3 text-[13px] font-medium text-text"
         >
           Algunas letras del catálogo externo respondieron lento; mostramos las recetas
-          disponibles y reintentaremos automáticamente en la próxima actualización.
+          disponibles hasta la próxima actualización automática.
         </p>
       ) : null}
 
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-        <div className="relative flex-1">
-          <label htmlFor="recipe-search" className="sr-only">
-            Buscar recetas
-          </label>
-          <input
-            id="recipe-search"
-            type="text"
-            inputMode="search"
-            value={query}
-            onChange={(event) => {
-              setQuery(event.target.value);
-              setVisible(PAGE_SIZE);
-            }}
-            placeholder="Buscar receta, categoría o cocina"
-            autoComplete="off"
-            className="w-full rounded-md border border-line bg-panel px-4 py-3 text-sm outline-none placeholder:text-muted focus:border-accent"
-          />
-        </div>
-
-        <button
-          type="button"
-          onClick={handleRandomMeal}
-          disabled={randomLoading}
-          className="inline-flex min-h-11 items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-semibold text-night disabled:opacity-60"
-        >
-          {randomLoading ? "Buscando…" : "¿Qué cocino hoy?"}
-        </button>
-      </div>
-
       {randomError ? (
-        <p role="alert" className="mt-3 text-xs text-accent">
+        <p
+          role="alert"
+          className="rounded-2xl border border-accent bg-accent-soft px-4 py-3 text-sm font-medium text-accent-ink"
+        >
           {randomError}
         </p>
       ) : null}
 
       {randomMeal ? (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-panel p-4">
-          <div className="flex items-center gap-3">
-            <div className="relative size-14 shrink-0 overflow-hidden rounded-lg border border-line">
+        <section
+          aria-label="Sugerencia aleatoria"
+          className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line-strong bg-sun p-4 sm:px-5"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="relative size-16 shrink-0 overflow-hidden rounded-xl border border-text/15 bg-surface">
               <Image
                 src={`${randomMeal.strMealThumb}/small`}
                 alt={randomMeal.strMeal}
                 fill
-                sizes="56px"
+                sizes="64px"
                 className="object-cover"
               />
             </div>
             <div>
-              <p className="text-xs text-muted">
+              <p className="text-[13px] font-semibold text-text">
+                Sugerencia del chef ·{" "}
                 {[randomMeal.strCategory, randomMeal.strArea].filter(Boolean).join(" · ")}
               </p>
-              <p className="text-sm font-semibold">{randomMeal.strMeal}</p>
+              <h2 className="font-display text-lg font-bold text-text">{randomMeal.strMeal}</h2>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+
+          <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/receta/${randomMeal.idMeal}`}
-              className="rounded-md bg-accent px-3 py-2 text-xs font-semibold text-night"
+              className="inline-flex min-h-11 items-center rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 hover:bg-accent-hover"
             >
               Ver receta
             </Link>
             <button
               type="button"
+              onClick={handleRandomMeal}
+              disabled={randomLoading}
+              className="inline-flex min-h-11 items-center rounded-xl border border-text/20 bg-surface px-4 py-2 text-sm font-semibold text-text hover:bg-panel"
+            >
+              Otra opción
+            </button>
+            <button
+              type="button"
               onClick={() => setRandomMeal(null)}
-              className="rounded-md border border-line px-3 py-2 text-xs text-muted"
+              aria-label="Cerrar sugerencia aleatoria"
+              className="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-[13px] font-semibold text-text underline hover:opacity-80"
             >
               Cerrar
             </button>
           </div>
-        </div>
+        </section>
       ) : null}
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div>
-          <label htmlFor="area-filter" className="mb-1 block text-xs font-medium text-muted">
-            Cocina / País ({areas.length})
-          </label>
-          <select
-            id="area-filter"
-            value={area}
-            onChange={(event) => {
-              setArea(event.target.value);
-              setVisible(PAGE_SIZE);
-            }}
-            className="w-full rounded-md border border-line bg-panel px-3 py-2.5 text-sm outline-none focus:border-accent"
-          >
-            <option value={ALL_VALUE}>Todas las cocinas</option>
-            {areas.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="ingredient-filter" className="mb-1 block text-xs font-medium text-muted">
-            Ingrediente principal ({ingredientNames.length})
-          </label>
-          <select
-            id="ingredient-filter"
-            value={ingredient}
-            onChange={(event) => {
-              setIngredient(event.target.value);
-              setVisible(PAGE_SIZE);
-            }}
-            className="w-full rounded-md border border-line bg-panel px-3 py-2.5 text-sm outline-none focus:border-accent"
-          >
-            <option value="">Cualquier ingrediente</option>
-            {ingredientNames.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => {
-            setCategory(ALL_VALUE);
-            setVisible(PAGE_SIZE);
-          }}
-          aria-pressed={category === ALL_VALUE}
-          className={[
-            "rounded-md border px-3 py-1.5 text-xs",
-            category === ALL_VALUE
-              ? "border-accent bg-accent font-semibold text-night"
-              : "border-line text-muted hover:text-text",
-          ].join(" ")}
-        >
-          Todas
-        </button>
-        {categories.map((item) => (
+      <section aria-label="Categorías culinarias">
+        <div className="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0">
           <button
-            key={item.idCategory}
             type="button"
             onClick={() => {
-              setCategory(item.strCategory);
+              setCategory(ALL_VALUE);
               setVisible(PAGE_SIZE);
             }}
-            aria-pressed={item.strCategory === category}
+            aria-pressed={category === ALL_VALUE}
             className={[
-              "rounded-md border px-3 py-1.5 text-xs",
-              item.strCategory === category
-                ? "border-accent bg-accent font-semibold text-night"
-                : "border-line text-muted hover:text-text",
+              "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl border px-3.5 py-2 text-[13px] font-semibold transition-colors duration-150",
+              category === ALL_VALUE
+                ? "border-text bg-sun text-text"
+                : "border-line bg-surface text-muted hover:border-line-strong hover:text-text",
             ].join(" ")}
           >
-            {item.strCategory}
+            <span>Todas</span>
           </button>
-        ))}
-      </div>
 
-      {activeCategoryInfo?.strCategoryDescription ? (
-        <p className="mt-3 text-xs leading-relaxed text-muted">
-          {activeCategoryInfo.strCategoryDescription}
-        </p>
-      ) : null}
+          {categories.map((item) => {
+            const active = item.strCategory === category;
 
-      <div className="mt-6 flex items-baseline justify-between border-b border-line pb-2">
+            return (
+              <button
+                key={item.idCategory}
+                type="button"
+                onClick={() => {
+                  setCategory(item.strCategory);
+                  setVisible(PAGE_SIZE);
+                }}
+                aria-pressed={active}
+                className={[
+                  "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl border px-3 py-1.5 text-[13px] font-semibold transition-colors duration-150",
+                  active
+                    ? "border-text bg-sun text-text"
+                    : "border-line bg-surface text-muted hover:border-line-strong hover:text-text",
+                ].join(" ")}
+              >
+                <Image
+                  src={item.strCategoryThumb}
+                  alt=""
+                  width={26}
+                  height={26}
+                  className="size-6 rounded-md object-contain"
+                />
+                <span>{item.strCategory}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {activeCategoryInfo?.strCategoryDescription ? (
+          <div className="mt-3 flex items-start gap-3 rounded-2xl border border-line bg-surface p-3.5 text-[13px] leading-relaxed text-muted">
+            <Image
+              src={activeCategoryInfo.strCategoryThumb}
+              alt=""
+              width={48}
+              height={48}
+              className="size-12 shrink-0 rounded-xl bg-panel object-contain p-1"
+            />
+            <p className="max-w-[75ch]">
+              <strong className="text-text">{activeCategoryInfo.strCategory}:</strong>{" "}
+              {activeCategoryInfo.strCategoryDescription}
+            </p>
+          </div>
+        ) : null}
+      </section>
+
+      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-2.5">
         <p className="text-sm text-muted" aria-live="polite">
           {ingredientLoading ? (
-            "Filtrando por ingrediente…"
+            "Consultando recetas con ese ingrediente…"
           ) : hasActiveFilters ? (
             <>
-              <span className="font-semibold text-text tabular-nums">{filtered.length}</span>{" "}
-              resultados
+              <span className="font-bold text-text tabular-nums">{filtered.length}</span>{" "}
+              {filtered.length === 1 ? "receta encontrada" : "recetas encontradas"}
               {query ? ` para “${query}”` : ""}
               {ingredient ? ` con ${ingredient}` : ""}
             </>
           ) : (
             <>
-              <span className="font-semibold text-text tabular-nums">{meals.length}</span>{" "}
-              recetas
+              <span className="font-bold text-text tabular-nums">{meals.length}</span>{" "}
+              recetas disponibles
             </>
           )}
         </p>
+
         {hasActiveFilters ? (
-          <button type="button" onClick={clearFilters} className="text-xs text-accent underline">
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="text-[13px] font-semibold text-accent underline hover:text-accent-hover"
+          >
             Limpiar filtros
           </button>
         ) : null}
       </div>
 
       {ingredientError ? (
-        <p role="alert" className="mt-4 text-sm text-accent">
+        <p
+          role="alert"
+          className="rounded-2xl border border-accent bg-accent-soft px-4 py-3 text-sm font-medium text-accent-ink"
+        >
           {ingredientError}
         </p>
       ) : null}
 
       {shown.length > 0 ? (
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {shown.map((meal) => (
-            <MealCard key={meal.idMeal} meal={meal} />
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {shown.map((meal, index) => (
+            <MealCard key={meal.idMeal} meal={meal} priority={index < 4} />
           ))}
         </div>
       ) : !ingredientLoading ? (
-        <div className="mt-6 rounded-md border border-dashed border-line p-10 text-center">
-          <p className="font-semibold">No hay resultados con esos filtros</p>
+        <div className="rounded-3xl border border-dashed border-line-strong bg-panel p-10 text-center">
+          <h2 className="font-display text-lg font-bold text-text">
+            No encontramos recetas con esa combinación
+          </h2>
+          <p className="mt-1.5 text-sm text-muted">
+            Probá limpiar algún filtro o buscá un término más amplio.
+          </p>
           <button
             type="button"
             onClick={clearFilters}
-            className="mt-4 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-night"
+            className="mt-5 inline-flex min-h-11 items-center rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-hover"
           >
             Ver todas las recetas
           </button>
@@ -369,15 +502,15 @@ export function RecipeExplorer({
       ) : null}
 
       {remaining > 0 ? (
-        <div className="mt-8 text-center">
+        <div className="pt-2 text-center">
           <button
             type="button"
             onClick={() => setVisible((current) => current + PAGE_SIZE)}
-            className="rounded-md border border-line px-4 py-2 text-sm"
+            className="inline-flex min-h-11 items-center rounded-xl border border-line-strong bg-surface px-5 py-2.5 text-sm font-semibold text-text transition-colors duration-150 hover:bg-panel active:scale-[0.985]"
           >
             Ver más recetas
           </button>
-          <p className="mt-2 text-xs text-muted tabular-nums">
+          <p className="mt-2 text-[13px] text-muted tabular-nums">
             Mostrando {shown.length} de {filtered.length}
           </p>
         </div>

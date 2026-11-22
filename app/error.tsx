@@ -9,23 +9,25 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <section className="mx-auto max-w-lg rounded-xl border border-line bg-panel p-8 text-center">
-      <h1 className="text-2xl font-bold">No pudimos cargar las recetas</h1>
-      <p className="mt-3 text-sm leading-relaxed text-muted">
-        Ocurrió un problema temporal al consultar el catálogo de TheMealDB. Podés volver a
-        intentar o abrir tus favoritos guardados.
+    <section className="mx-auto max-w-lg rounded-3xl border border-line bg-panel p-8 text-center">
+      <h1 className="font-display text-2xl font-bold text-text">
+        No pudimos cargar las recetas
+      </h1>
+      <p className="mt-2.5 text-sm leading-relaxed text-muted">
+        Ocurrió un problema temporal al consultar TheMealDB. Podés volver a intentar o abrir tus
+        favoritos guardados.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <button
           type="button"
           onClick={reset}
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-night"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-hover"
         >
           Reintentar
         </button>
         <Link
           href="/favoritos"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg border border-line px-5 py-2.5 text-sm font-semibold"
+          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line-strong bg-surface px-5 py-2.5 text-sm font-semibold text-text"
         >
           Ir a favoritos
         </Link>

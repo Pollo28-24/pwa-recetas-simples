@@ -95,24 +95,34 @@ export function InstallButton() {
         type="button"
         onClick={handleInstall}
         aria-expanded={isIosSafari ? showIosGuide : undefined}
-        className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent transition-colors"
+        className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-line-strong bg-panel px-3.5 py-2 text-[13px] font-semibold text-text transition-colors duration-150 hover:bg-sun active:scale-[0.985]"
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-4">
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.9}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="size-4 shrink-0"
+        >
           <path d="M12 3v12" />
           <path d="m7 10 5 5 5-5" />
           <path d="M5 20h14" />
         </svg>
-        <span>Instalar app</span>
+        <span className="hidden sm:inline">Instalar app</span>
+        <span className="sm:hidden">Instalar</span>
       </button>
 
       {isIosSafari && showIosGuide ? (
         <div
           role="dialog"
           aria-label="Cómo instalar en iOS"
-          className="fixed right-4 top-16 z-50 w-72 rounded-xl border border-line bg-panel p-4 text-xs leading-relaxed shadow-lg"
+          className="fixed right-4 top-20 z-50 w-72 rounded-2xl border border-line bg-surface p-4 text-sm leading-relaxed text-text shadow-lg"
         >
-          <p className="font-semibold">Instalar en iPhone o iPad</p>
-          <p className="mt-1 text-muted">
+          <p className="font-display font-bold">Instalar en iPhone o iPad</p>
+          <p className="mt-1.5 text-[13px] text-muted">
             Tocá el botón <strong>Compartir</strong> de Safari y elegí{" "}
             <strong>«Añadir a pantalla de inicio»</strong>.
           </p>
@@ -122,7 +132,7 @@ export function InstallButton() {
               setShowIosGuide(false);
               setDismissedHint(true);
             }}
-            className="mt-3 text-xs font-semibold text-accent underline"
+            className="mt-3 inline-flex min-h-10 items-center rounded-lg bg-sun px-3 py-1.5 text-[13px] font-semibold text-text"
           >
             Entendido
           </button>

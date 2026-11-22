@@ -67,7 +67,7 @@ function IngredientThumb({ name }: { name: string }) {
     return (
       <span
         aria-hidden="true"
-        className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-line bg-panel text-xs font-semibold text-muted"
+        className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-line bg-panel text-[13px] font-bold text-text"
       >
         {name.slice(0, 1).toUpperCase()}
       </span>
@@ -75,7 +75,7 @@ function IngredientThumb({ name }: { name: string }) {
   }
 
   return (
-    <span className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-line bg-panel">
+    <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-line bg-panel">
       <Image
         src={getIngredientImageUrl(name, "small")}
         alt=""
@@ -139,16 +139,16 @@ export function IngredientsList({
   };
 
   return (
-    <div>
+    <div className="rounded-2xl border border-line bg-surface p-2 sm:p-3">
       {checkedList.length > 0 ? (
-        <div className="mb-3 flex items-center justify-between text-xs text-muted">
-          <span className="tabular-nums">
-            {checkedList.length} de {ingredients.length} marcados
+        <div className="flex items-center justify-between border-b border-line px-2 pb-2.5 pt-1 text-[13px] text-muted">
+          <span className="font-medium tabular-nums">
+            {checkedList.length} de {ingredients.length} listos
           </span>
           <button
             type="button"
             onClick={resetAll}
-            className="font-semibold text-accent underline underline-offset-4"
+            className="font-semibold text-accent underline hover:text-accent-hover"
           >
             Reiniciar lista
           </button>
@@ -161,20 +161,22 @@ export function IngredientsList({
 
           return (
             <li key={`${ingredient.name}-${index}`}>
-              <label className="flex min-h-12 cursor-pointer items-center gap-3 py-2.5">
+              <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-xl px-2 py-2.5 transition-colors duration-150 hover:bg-panel">
                 <input
                   type="checkbox"
                   checked={isChecked}
                   onChange={() => toggle(index)}
-                  className="size-4 shrink-0 accent-accent"
+                  className="size-5 shrink-0 accent-accent"
                 />
                 <IngredientThumb name={ingredient.name} />
-                <span className="flex flex-1 flex-wrap items-baseline justify-between gap-x-2 text-sm leading-relaxed">
-                  <span className={isChecked ? "text-muted line-through" : "font-medium"}>
+                <span className="flex flex-1 flex-wrap items-baseline justify-between gap-x-3 text-base leading-snug">
+                  <span className={isChecked ? "text-muted line-through" : "font-semibold text-text"}>
                     {ingredient.name}
                   </span>
                   {ingredient.measure ? (
-                    <span className="text-xs text-muted">{ingredient.measure}</span>
+                    <span className="rounded-md bg-panel px-2 py-0.5 text-[13px] font-medium text-muted">
+                      {ingredient.measure}
+                    </span>
                   ) : null}
                 </span>
               </label>
