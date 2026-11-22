@@ -46,10 +46,16 @@ export default function RootLayout({
   return (
     <html lang="es" className={openSans.variable}>
       <body>
+        <a
+          href="#contenido-principal"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-night"
+        >
+          Saltar al contenido
+        </a>
         <FavoritesProvider>
           <Header />
           <OfflineBanner />
-          <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+          <main id="contenido-principal" className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
             {children}
           </main>
           <PwaRegister />

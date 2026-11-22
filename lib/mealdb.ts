@@ -1,29 +1,61 @@
-import type { Ingredient, Meal, MealSummary } from "@/lib/types";
+import type { CatalogResult, Ingredient, Meal, MealSummary } from "@/lib/types";
 
-const BASE_URL = "https://www.themealdb.com/api/json/v1/1";
+export const MEALDB_BASE_URL = "https://www.themealdb.com/api/json/v1/1";
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
+const BATCH_SIZE = 6;
 /** The free API is static data, so a day of caching is plenty. */
-const REVALIDATE_SECONDS = 60 * 60 * 24;
+export const REVALIDATE_SECONDS = 60 * 60 * 24;
 
-async function fetchMeals(path: string): Promise<Meal[]> {
-  try {
-    const response = await fetch(`${BASE_URL}${path}`, {
-      next: { revalidate: REVALIDATE_SECONDS },
-    });
+let lastCompleteCatalog: MealSummary[] | null = null;
 
-    if (!response.ok) return [];
+type FetchResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; status: number | null };
 
-    const data = (await response.json()) as { meals?: Meal[] | null };
-    return data.meals ?? [];
-  } catch {
-    // A single failing request should never break the whole page.
-    return [];
+async function sleep(ms: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export async function fetchMealDbJson<T>(
+  path: string,
+  options: { revalidate?: number | false; retries?: number } = {},
+): Promise<FetchResult<T>> {
+  const { revalidate = REVALIDATE_SECONDS, retries = 1 } = options;
+
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      const init: RequestInit & { next?: { revalidate?: number } } =
+        revalidate === false
+          ? { cache: "no-store", signal: AbortSignal.timeout(8000) }
+          : { next: { revalidate }, signal: AbortSignal.timeout(8000) };
+
+      const response = await fetch(`${MEALDB_BASE_URL}${path}`, init);
+
+      if (!response.ok) {
+        if (attempt < retries && (response.status === 429 || response.status >= 500)) {
+          await sleep(180 * (attempt + 1));
+          continue;
+        }
+        return { ok: false, status: response.status };
+      }
+
+      const data = (await response.json()) as T;
+      return { ok: true, data };
+    } catch {
+      if (attempt < retries) {
+        await sleep(180 * (attempt + 1));
+        continue;
+      }
+      return { ok: false, status: null };
+    }
   }
+
+  return { ok: false, status: null };
 }
 
 export function toSummary(meal: Meal | MealSummary): MealSummary {
   return {
-    idMeal: meal.idMeal,
+    idMeal: String(meal.idMeal),
     strMeal: meal.strMeal,
     strMealThumb: meal.strMealThumb,
     strCategory: meal.strCategory ?? null,
@@ -31,31 +63,99 @@ export function toSummary(meal: Meal | MealSummary): MealSummary {
   };
 }
 
+export function getMealImageUrl(
+  thumb: string,
+  size: "small" | "medium" | "large" | "full" = "medium",
+): string {
+  if (!thumb) return "";
+  if (size === "full") return thumb;
+  if (/\/(small|medium|large|preview)$/i.test(thumb)) return thumb;
+  return `${thumb}/${size}`;
+}
+
+export function getSafeHttpUrl(rawUrl: string | null | undefined): string | null {
+  const trimmed = (rawUrl ?? "").trim();
+  if (!trimmed) return null;
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return parsed.toString();
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * TheMealDB has no "list every meal" endpoint, so we query by first letter
- * (a-z) and merge the results. This yields the full catalog (~790 recipes).
+ * (a-z) in controlled batches and merge results without caching partial failures
+ * over a previously healthy catalog.
  */
-export async function getAllMeals(): Promise<MealSummary[]> {
-  const pages = await Promise.all(
-    ALPHABET.map((letter) => fetchMeals(`/search.php?f=${letter}`)),
-  );
+export async function getCatalog(): Promise<CatalogResult> {
+  const pages: Array<{ letter: string; ok: boolean; meals: Meal[] }> = [];
 
-  const byId = new Map<string, MealSummary>();
-
-  for (const meal of pages.flat()) {
-    if (!meal?.idMeal || !meal.strMeal || !meal.strMealThumb) continue;
-    byId.set(meal.idMeal, toSummary(meal));
+  for (let i = 0; i < ALPHABET.length; i += BATCH_SIZE) {
+    const slice = ALPHABET.slice(i, i + BATCH_SIZE);
+    const batch = await Promise.all(
+      slice.map(async (letter) => {
+        const res = await fetchMealDbJson<{ meals?: Meal[] | string | null }>(
+          `/search.php?f=${letter}`,
+        );
+        if (!res.ok) {
+          return { letter, ok: false, meals: [] as Meal[] };
+        }
+        const rawMeals = Array.isArray(res.data?.meals) ? res.data.meals : [];
+        return { letter, ok: true, meals: rawMeals };
+      }),
+    );
+    pages.push(...batch);
   }
 
-  return [...byId.values()].sort((a, b) =>
+  const failedLetters = pages.filter((p) => !p.ok).map((p) => p.letter);
+  const byId = new Map<string, MealSummary>();
+
+  for (const page of pages) {
+    for (const meal of page.meals) {
+      if (!meal?.idMeal || !meal.strMeal || !meal.strMealThumb) continue;
+      byId.set(String(meal.idMeal), toSummary(meal));
+    }
+  }
+
+  const meals = [...byId.values()].sort((a, b) =>
     a.strMeal.localeCompare(b.strMeal, "es"),
   );
+
+  if (failedLetters.length === 0 && meals.length > 0) {
+    lastCompleteCatalog = meals;
+    return { meals, partial: false, failedLetters: [] };
+  }
+
+  if (lastCompleteCatalog && lastCompleteCatalog.length > meals.length) {
+    return {
+      meals: lastCompleteCatalog,
+      partial: false,
+      failedLetters: [],
+    };
+  }
+
+  return {
+    meals,
+    partial: failedLetters.length > 0,
+    failedLetters,
+  };
+}
+
+export async function getAllMeals(): Promise<MealSummary[]> {
+  const { meals } = await getCatalog();
+  return meals;
 }
 
 export async function getMealById(id: string): Promise<Meal | null> {
   if (!/^\d+$/.test(id)) return null;
-  const meals = await fetchMeals(`/lookup.php?i=${id}`);
-  return meals[0] ?? null;
+  const res = await fetchMealDbJson<{ meals?: Meal[] | null }>(`/lookup.php?i=${id}`);
+  if (!res.ok || !Array.isArray(res.data?.meals)) return null;
+  return res.data.meals[0] ?? null;
 }
 
 export async function getMealsByCategory(
@@ -65,13 +165,16 @@ export async function getMealsByCategory(
 ): Promise<MealSummary[]> {
   if (!category) return [];
 
-  const meals = await fetchMeals(`/filter.php?c=${encodeURIComponent(category)}`);
+  const res = await fetchMealDbJson<{ meals?: Meal[] | null }>(
+    `/filter.php?c=${encodeURIComponent(category)}`,
+  );
+  if (!res.ok || !Array.isArray(res.data?.meals)) return [];
 
-  return meals
+  return res.data.meals
     .filter((meal) => meal.idMeal !== excludeId && meal.strMeal && meal.strMealThumb)
     .slice(0, limit)
     .map((meal) => ({
-      idMeal: meal.idMeal,
+      idMeal: String(meal.idMeal),
       strMeal: meal.strMeal,
       strMealThumb: meal.strMealThumb,
       strCategory: category,
@@ -104,8 +207,8 @@ export function getSteps(instructions: string | null | undefined): string[] {
 
   const byLine = clean
     .split(/\n+/)
-    .map((step) => step.replace(/^(step\s*\d+[:.)-]?\s*)/i, "").trim())
-    .filter(Boolean);
+    .map((line) => line.replace(/^(step\s*\d+[:.)-]?\s*|\d+[.)]\s+)/i, "").trim())
+    .filter((line) => line.length > 0 && !/^(step\s*)?\d+\.?$/i.test(line));
 
   if (byLine.length > 1) return byLine;
 

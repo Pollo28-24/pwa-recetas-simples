@@ -9,6 +9,7 @@ import {
   getIngredients,
   getMealById,
   getMealsByCategory,
+  getSafeHttpUrl,
   getSteps,
   getTags,
   toSummary,
@@ -40,6 +41,7 @@ export default async function RecipePage({ params }: PageProps) {
   const steps = getSteps(meal.strInstructions);
   const tags = getTags(meal.strTags);
   const origin = meal.strArea || meal.strCountry;
+  const youtubeUrl = getSafeHttpUrl(meal.strYoutube);
   const related = await getMealsByCategory(meal.strCategory, meal.idMeal, 4);
 
   return (
@@ -71,8 +73,8 @@ export default async function RecipePage({ params }: PageProps) {
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <FavoriteButton meal={toSummary(meal)} withLabel />
-            {meal.strYoutube ? (
-              <a href={meal.strYoutube} target="_blank" rel="noreferrer" className="rounded-md border border-line px-4 py-2 text-sm">
+            {youtubeUrl ? (
+              <a href={youtubeUrl} target="_blank" rel="noreferrer" className="rounded-md border border-line px-4 py-2 text-sm">
                 Ver vídeo
               </a>
             ) : null}
@@ -84,7 +86,7 @@ export default async function RecipePage({ params }: PageProps) {
 
           <section className="mt-8">
             <h2 className="border-b border-line pb-2 text-xl font-bold">Ingredientes</h2>
-            <IngredientsList ingredients={ingredients} />
+            <IngredientsList mealId={meal.idMeal} ingredients={ingredients} />
           </section>
 
           <section className="mt-8">

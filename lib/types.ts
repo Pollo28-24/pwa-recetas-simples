@@ -13,10 +13,34 @@ export type Meal = MealSummary & {
   strSource: string | null;
   strCountry: string | null;
   strMealAlternate: string | null;
+  strImageSource: string | null;
+  strCreativeCommonsConfirmed: string | null;
+  dateModified: string | null;
   [key: string]: unknown;
 };
 
 export type Ingredient = {
   name: string;
   measure: string;
+};
+
+export type CategoryInfo = {
+  idCategory: string;
+  strCategory: string;
+  strCategoryThumb: string;
+  strCategoryDescription: string;
+};
+
+export type IngredientInfo = {
+  idIngredient: string;
+  strIngredient: string;
+  strDescription: string | null;
+  strThumb: string | null;
+  strType: string | null;
+};
+
+export type CatalogResult = {
+  meals: MealSummary[];
+  partial: boolean;
+  failedLetters: string[];
 };
