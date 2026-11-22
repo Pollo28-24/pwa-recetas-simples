@@ -1,0 +1,133 @@
+"use client";
+
+import { useEffect, useState, useSyncExternalStore } from "react";
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+};
+
+function subscribeDisplayMode(callback: () => void) {
+  const mq = window.matchMedia("(display-mode: standalone)");
+  mq.addEventListener("change", callback);
+  window.addEventListener("appinstalled", callback);
+  return () => {
+    mq.removeEventListener("change", callback);
+    window.removeEventListener("appinstalled", callback);
+  };
+}
+
+function getStandaloneSnapshot(): boolean {
+  if (typeof window === "undefined") return false;
+  const nav = window.navigator as Navigator & { standalone?: boolean };
+  return window.matchMedia("(display-mode: standalone)").matches || nav.standalone === true;
+}
+
+function subscribeClientMount() {
+  return () => {};
+}
+
+export function InstallButton() {
+  const [promptEvent, setPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
+  const [dismissedHint, setDismissedHint] = useState(false);
+  const [showIosGuide, setShowIosGuide] = useState(false);
+
+  const isClient = useSyncExternalStore(
+    subscribeClientMount,
+    () => true,
+    () => false,
+  );
+
+  const isStandalone = useSyncExternalStore(
+    subscribeDisplayMode,
+    getStandaloneSnapshot,
+    () => false,
+  );
+
+  const isIosSafari =
+    isClient &&
+    /iphone|ipad|ipod/i.test(window.navigator.userAgent) &&
+    !/crios|fxios|edgios/i.test(window.navigator.userAgent);
+
+  useEffect(() => {
+    const onBeforeInstall = (event: Event) => {
+      event.preventDefault();
+      setPromptEvent(event as BeforeInstallPromptEvent);
+    };
+
+    const onInstalled = () => {
+      setPromptEvent(null);
+      setShowIosGuide(false);
+    };
+
+    window.addEventListener("beforeinstallprompt", onBeforeInstall);
+    window.addEventListener("appinstalled", onInstalled);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", onBeforeInstall);
+      window.removeEventListener("appinstalled", onInstalled);
+    };
+  }, []);
+
+  if (!isClient || isStandalone) return null;
+
+  const canPrompt = Boolean(promptEvent);
+  if (!canPrompt && (!isIosSafari || dismissedHint)) return null;
+
+  const handleInstall = async () => {
+    if (promptEvent) {
+      await promptEvent.prompt();
+      const choice = await promptEvent.userChoice;
+      if (choice.outcome === "accepted") {
+        setPromptEvent(null);
+      }
+      return;
+    }
+
+    if (isIosSafari) {
+      setShowIosGuide((prev) => !prev);
+    }
+  };
+
+  return (
+    <div className="relative flex items-center">
+      <button
+        type="button"
+        onClick={handleInstall}
+        aria-expanded={isIosSafari ? showIosGuide : undefined}
+        className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent transition-colors"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-4">
+          <path d="M12 3v12" />
+          <path d="m7 10 5 5 5-5" />
+          <path d="M5 20h14" />
+        </svg>
+        <span>Instalar app</span>
+      </button>
+
+      {isIosSafari && showIosGuide ? (
+        <div
+          role="dialog"
+          aria-label="Cómo instalar en iOS"
+          className="fixed right-4 top-16 z-50 w-72 rounded-xl border border-line bg-panel p-4 text-xs leading-relaxed shadow-lg"
+        >
+          <p className="font-semibold">Instalar en iPhone o iPad</p>
+          <p className="mt-1 text-muted">
+            Tocá el botón <strong>Compartir</strong> de Safari y elegí{" "}
+            <strong>«Añadir a pantalla de inicio»</strong>.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setShowIosGuide(false);
+              setDismissedHint(true);
+            }}
+            className="mt-3 text-xs font-semibold text-accent underline"
+          >
+            Entendido
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
