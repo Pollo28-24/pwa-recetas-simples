@@ -64,6 +64,57 @@
   }
 }
 
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes enter-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.975) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes heart-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.motion-hero {
+  animation: enter-up 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.motion-panel {
+  animation: enter-scale 480ms 70ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.motion-card {
+  animation: enter-up 420ms calc(min(var(--stagger, 0), 10) * 35ms)
+    cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.motion-heart-active {
+  animation: heart-pop 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* Custom subtle scrollbars aligned with the warm daylight palette */
 ::-webkit-scrollbar {
   width: 10px;
@@ -85,6 +136,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .motion-hero,
+  .motion-panel,
+  .motion-card,
+  .motion-heart-active {
+    animation: none !important;
+  }
+
   *,
   *::before,
   *::after {

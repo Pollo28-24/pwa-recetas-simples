@@ -159,9 +159,10 @@ Sistema de radios consistente: `12px` (`rounded-xl`) para botones, inputs, selec
 - **State:** Inactivo en `#FFFFFF` (`#6B4E47`); activo en `#FED84F` con tinta y borde `#2B0000`.
 
 ### Cards
-- **Corner Style:** `16px` (`rounded-2xl`).
+- **Corner Style:** `24px` (`rounded-3xl`).
 - **Background:** `#FFFFFF` con borde `1px` `#EADFD2`.
-- **Hover:** Elevación `-2px`, zoom de foto `1.03` dentro de `overflow-hidden` (`500ms ease-out`) y sombra suave.
+- **Hover:** Elevación `-4px` (`-translate-y-1`), zoom de foto `1.05` dentro de `overflow-hidden` (`500ms ease-out`), flecha direccional deslizante y sombra suave.
+- **Motion:** Entrada escalonada controlada (`enter-up`, máx. `10` pasos a `35ms`) al montar o cambiar filtros, más pulso `heart-pop` al marcar favorito, desactivados bajo `prefers-reduced-motion`.
 
 ### Inputs
 - **Style:** Fondo `#FFFFFF`, borde `#D3C1AF`, radio `12px`, altura mínima `48px` (`min-h-12`).

@@ -24,17 +24,23 @@ export function FavoriteButton({ meal, withLabel = false, className = "" }: Favo
           : `Guardar ${meal.strMeal} en favoritos`
       }
       className={[
-        "inline-flex min-h-11 items-center justify-center gap-2 border font-semibold transition-all duration-150 active:scale-[0.985]",
+        "inline-flex min-h-11 items-center justify-center gap-2 border font-semibold transition-all duration-150 ease-out active:scale-[0.96]",
         withLabel ? "rounded-xl px-4 py-2.5 text-sm" : "size-11 rounded-full shadow-sm",
         active
           ? "border-accent bg-accent text-white hover:bg-accent-hover"
           : withLabel
             ? "border-line-strong bg-surface text-text hover:bg-panel"
-            : "border-line bg-surface/95 text-text hover:border-accent hover:text-accent",
+            : "border-line bg-surface/95 text-text hover:scale-105 hover:border-accent hover:text-accent",
         className,
       ].join(" ")}
     >
-      <HeartIcon filled={active} className="size-5 shrink-0" />
+      <HeartIcon
+        filled={active}
+        className={[
+          "size-5 shrink-0 transition-transform duration-150",
+          active ? "motion-heart-active" : "",
+        ].join(" ")}
+      />
       {withLabel ? (
         <span>{active ? "Guardada en favoritos" : "Guardar en favoritos"}</span>
       ) : null}

@@ -80,7 +80,7 @@ export default async function RecipePage({ params }: PageProps) {
       </Link>
 
       <article className="grid items-start gap-8 lg:grid-cols-12">
-        <div className="space-y-4 lg:sticky lg:top-24 lg:col-span-5">
+        <div className="motion-hero space-y-4 lg:sticky lg:top-24 lg:col-span-5">
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line bg-panel shadow-sm">
             <Image
               src={getMealImageUrl(meal.strMealThumb, "large")}
@@ -127,7 +127,7 @@ export default async function RecipePage({ params }: PageProps) {
           ) : null}
         </div>
 
-        <div className="space-y-8 lg:col-span-7">
+        <div className="motion-panel space-y-8 lg:col-span-7">
           <div>
             <h1 className="font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
               {meal.strMeal}
@@ -219,9 +219,9 @@ export default async function RecipePage({ params }: PageProps) {
           <h2 className="mb-4 font-display text-xl font-bold text-text">
             Más recetas de {meal.strCategory}
           </h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {relatedByCategory.map((item) => (
-              <MealCard key={item.idMeal} meal={item} />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {relatedByCategory.map((item, index) => (
+              <MealCard key={item.idMeal} meal={item} index={index} />
             ))}
           </div>
         </section>
@@ -232,9 +232,9 @@ export default async function RecipePage({ params }: PageProps) {
           <h2 className="mb-4 font-display text-xl font-bold text-text">
             Más de la cocina {origin}
           </h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {relatedByArea.map((item) => (
-              <MealCard key={item.idMeal} meal={item} />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {relatedByArea.map((item, index) => (
+              <MealCard key={item.idMeal} meal={item} index={index} />
             ))}
           </div>
         </section>

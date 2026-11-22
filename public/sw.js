@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const STATIC_CACHE = `recetario-static-${CACHE_VERSION}`;
 const PAGES_CACHE = `recetario-pages-${CACHE_VERSION}`;
 const MEDIA_CACHE = `recetario-media-${CACHE_VERSION}`;

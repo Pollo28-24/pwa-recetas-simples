@@ -92,9 +92,9 @@ export function FavoritesGrid() {
         )}
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {favorites.map((meal) => (
-          <MealCard key={meal.idMeal} meal={meal} />
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {favorites.map((meal, index) => (
+          <MealCard key={meal.idMeal} meal={meal} index={index} />
         ))}
       </div>
     </>
