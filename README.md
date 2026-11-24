@@ -20,9 +20,10 @@ Aplicación web progresiva (PWA) de recetas construida con **Next.js 16 + React 
   - Lista de ingredientes tipo recetario con miniaturas reales (`images/ingredients/{nombre}-small.png`) y medidas alineadas.
   - Pasos de preparación numerados de lectura limpia (`62ch`) sin controles innecesarios.
   - Metadatos completos: nombre alternativo, etiquetas y cocina/categoría enlazables, vídeo en YouTube, fuente original, enlace canónico a TheMealDB y recetas relacionadas por categoría y cocina.
-- **PWA Offline**:
+- **PWA Offline y favoritos**:
   - `app/manifest.ts` con los 8 iconos PNG oficiales y shortcuts de acceso rápido.
   - `public/sw.js` con caché por capas, navegación `network-first` con fallback a `/offline`, precacheo automático de recetas marcadas como favoritas y `components/offline-banner.tsx`.
+  - `components/toast-provider.tsx`: notificaciones toast accesibles (`aria-live="polite"`) al agregar, eliminar o vaciar recetas favoritas, con opción rápida de **Deshacer**.
   - `components/install-button.tsx` con detección de `display-mode: standalone` e instrucciones para Safari iOS.
 
 ## Scripts

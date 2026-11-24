@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { OfflineBanner } from "@/components/offline-banner";
 import { PwaRegister } from "@/components/pwa-register";
+import { ToastProvider } from "@/components/toast-provider";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -104,18 +105,20 @@ export default function RootLayout({
         >
           Saltar al contenido
         </a>
-        <FavoritesProvider>
-          <Header />
-          <OfflineBanner />
-          <main
-            id="contenido-principal"
-            className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
-          >
-            {children}
-          </main>
-          <Footer />
-          <PwaRegister />
-        </FavoritesProvider>
+        <ToastProvider>
+          <FavoritesProvider>
+            <Header />
+            <OfflineBanner />
+            <main
+              id="contenido-principal"
+              className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
+            >
+              {children}
+            </main>
+            <Footer />
+            <PwaRegister />
+          </FavoritesProvider>
+        </ToastProvider>
         {process.env.NODE_ENV === "development" ? (
           <Script id="sw-dev-cleanup" strategy="beforeInteractive">
             {devSwCleanupScript}

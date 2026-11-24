@@ -8,6 +8,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import { useToast } from "@/components/toast-provider";
 import { getMealImageUrl } from "@/lib/mealdb";
 import type { MealSummary } from "@/lib/types";
 
@@ -125,6 +126,7 @@ function precacheMealForOffline(meal: MealSummary): void {
 }
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
+  const { showToast } = useToast();
   const favorites = useSyncExternalStore(
     subscribeFavorites,
     getFavoritesSnapshot,
@@ -136,22 +138,73 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     () => false,
   );
 
-  const toggleFavorite = useCallback((meal: MealSummary) => {
-    const current = getFavoritesSnapshot();
-    const exists = current.some((item) => item.idMeal === meal.idMeal);
-    if (exists) {
-      writeFavorites(current.filter((item) => item.idMeal !== meal.idMeal));
-      return;
-    }
+  const saveFavorite = useCallback(
+    (meal: MealSummary) => {
+      const current = getFavoritesSnapshot();
+      const summary = pickSummary(meal);
+      const next = [summary, ...current.filter((item) => item.idMeal !== summary.idMeal)];
+      writeFavorites(next);
+      precacheMealForOffline(summary);
 
-    const summary = pickSummary(meal);
-    writeFavorites([summary, ...current]);
-    precacheMealForOffline(summary);
-  }, []);
+      showToast({
+        dedupeKey: `favorite:${summary.idMeal}`,
+        tone: "added",
+        title: "Se ha agregado a favoritos",
+        description: summary.strMeal,
+      });
+    },
+    [showToast],
+  );
+
+  const toggleFavorite = useCallback(
+    (meal: MealSummary) => {
+      const current = getFavoritesSnapshot();
+      const exists = current.some((item) => item.idMeal === meal.idMeal);
+      if (exists) {
+        writeFavorites(current.filter((item) => item.idMeal !== meal.idMeal));
+        showToast({
+          dedupeKey: `favorite:${meal.idMeal}`,
+          tone: "removed",
+          title: "Se ha eliminado de favoritos",
+          description: meal.strMeal,
+          action: {
+            label: "Deshacer",
+            onClick: () => saveFavorite(meal),
+          },
+        });
+        return;
+      }
+
+      saveFavorite(meal);
+    },
+    [saveFavorite, showToast],
+  );
 
   const clearFavorites = useCallback(() => {
+    const previous = getFavoritesSnapshot();
+    if (previous.length === 0) return;
+
     writeFavorites(EMPTY_FAVORITES);
-  }, []);
+    showToast({
+      dedupeKey: "favorites:clear",
+      tone: "removed",
+      title: "Se vaciaron tus favoritos",
+      description: `${previous.length} ${previous.length === 1 ? "receta eliminada" : "recetas eliminadas"}`,
+      action: {
+        label: "Deshacer",
+        onClick: () => {
+          writeFavorites(previous);
+          previous.forEach(precacheMealForOffline);
+          showToast({
+            dedupeKey: "favorites:clear",
+            tone: "added",
+            title: "Se restauraron tus favoritos",
+            description: `${previous.length} ${previous.length === 1 ? "receta recuperada" : "recetas recuperadas"}`,
+          });
+        },
+      },
+    });
+  }, [showToast]);
 
   const value = useMemo<FavoritesContextValue>(
     () => ({

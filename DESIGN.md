@@ -171,6 +171,9 @@ Sistema de radios consistente: `12px` (`rounded-xl`) para botones, inputs, selec
 ### Navigation
 - Cabecera opaca (`#FFFFFF`, `border-b #EADFD2`) con el logotipo `chef_gorro_blanco`, enlaces `Recetas` y `Favoritos` (badge contador en `#FED84F` con `#2B0000`) y botón contextual `Instalar app`.
 
+### Toast Notifications
+- Cola inferior derecha en escritorio (inferior ancho completo en móvil) sobre región `aria-live="polite"`, superficie `#FFFFFF` con borde `#D3C1AF`, radio `16px` (`rounded-2xl`), insignia de estado (`#ECFDF3`/`#166534` al agregar y `#FDECEB`/`#9E1F24` al eliminar), botón de cierre `44px` y acción **Deshacer** cuando se elimina o vacía favoritos. Respeta `prefers-reduced-motion` y pausa el cierre automático al pasar el puntero o enfocar.
+
 ## Do's and Don'ts
 
 ### Do:
