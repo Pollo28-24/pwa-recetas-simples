@@ -2,13 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { useFavorites } from "@/components/favorites-provider";
 import { MealCard } from "@/components/meal-card";
 
 export function FavoritesGrid() {
   const { favorites, ready, clearFavorites } = useFavorites();
-  const [confirmClear, setConfirmClear] = useState(false);
 
   if (!ready) {
     return (
@@ -68,35 +66,13 @@ export function FavoritesGrid() {
           conexión si ya las abriste o guardaste con red.
         </p>
 
-        {!confirmClear ? (
-          <button
-            type="button"
-            onClick={() => setConfirmClear(true)}
-            className="inline-flex min-h-11 items-center rounded-xl border border-line-strong bg-surface px-4 py-2 text-[13px] font-semibold text-text transition-colors duration-150 hover:bg-panel"
-          >
-            Vaciar favoritos
-          </button>
-        ) : (
-          <div className="flex items-center gap-2.5">
-            <button
-              type="button"
-              onClick={() => {
-                clearFavorites();
-                setConfirmClear(false);
-              }}
-              className="inline-flex min-h-11 items-center rounded-xl bg-accent px-4 py-2 text-[13px] font-semibold text-white hover:bg-accent-hover"
-            >
-              Confirmar borrado
-            </button>
-            <button
-              type="button"
-              onClick={() => setConfirmClear(false)}
-              className="inline-flex min-h-11 items-center rounded-xl border border-line bg-surface px-4 py-2 text-[13px] font-semibold text-muted hover:text-text"
-            >
-              Cancelar
-            </button>
-          </div>
-        )}
+        <button
+          type="button"
+          onClick={() => void clearFavorites()}
+          className="inline-flex min-h-11 items-center rounded-xl border border-line-strong bg-surface px-4 py-2 text-[13px] font-semibold text-text transition-colors duration-150 hover:bg-panel"
+        >
+          Vaciar favoritos
+        </button>
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Figtree } from "next/font/google";
 import Script from "next/script";
+import { ConfirmDialogProvider } from "@/components/confirm-dialog";
 import { FavoritesProvider } from "@/components/favorites-provider";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
@@ -106,18 +107,20 @@ export default function RootLayout({
           Saltar al contenido
         </a>
         <ToastProvider>
-          <FavoritesProvider>
-            <Header />
-            <OfflineBanner />
-            <main
-              id="contenido-principal"
-              className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
-            >
-              {children}
-            </main>
-            <Footer />
-            <PwaRegister />
-          </FavoritesProvider>
+          <ConfirmDialogProvider>
+            <FavoritesProvider>
+              <Header />
+              <OfflineBanner />
+              <main
+                id="contenido-principal"
+                className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
+              >
+                {children}
+              </main>
+              <Footer />
+              <PwaRegister />
+            </FavoritesProvider>
+          </ConfirmDialogProvider>
         </ToastProvider>
         {process.env.NODE_ENV === "development" ? (
           <Script id="sw-dev-cleanup" strategy="beforeInteractive">

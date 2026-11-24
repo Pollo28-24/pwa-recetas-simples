@@ -24,6 +24,7 @@ Aplicación web progresiva (PWA) de recetas construida con **Next.js 16 + React 
   - `app/manifest.ts` con los 8 iconos PNG oficiales y shortcuts de acceso rápido.
   - `public/sw.js` con caché por capas, navegación `network-first` con fallback a `/offline`, precacheo automático de recetas marcadas como favoritas y `components/offline-banner.tsx`.
   - `components/toast-provider.tsx`: notificaciones toast accesibles (`aria-live="polite"`) al agregar, eliminar o vaciar recetas favoritas, con opción rápida de **Deshacer**.
+  - `components/confirm-dialog.tsx`: diálogo modal accesible (`role="alertdialog"`) para confirmar la eliminación o el vaciado de favoritos.
   - `components/install-button.tsx` con detección de `display-mode: standalone` e instrucciones para Safari iOS.
 
 ## Scripts

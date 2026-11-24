@@ -174,6 +174,9 @@ Sistema de radios consistente: `12px` (`rounded-xl`) para botones, inputs, selec
 ### Toast Notifications
 - Cola inferior derecha en escritorio (inferior ancho completo en móvil) sobre región `aria-live="polite"`, superficie `#FFFFFF` con borde `#D3C1AF`, radio `16px` (`rounded-2xl`), insignia de estado (`#ECFDF3`/`#166534` al agregar y `#FDECEB`/`#9E1F24` al eliminar), botón de cierre `44px` y acción **Deshacer** cuando se elimina o vacía favoritos. Respeta `prefers-reduced-motion` y pausa el cierre automático al pasar el puntero o enfocar.
 
+### Confirm Dialog
+- Cuadro modal centrado (`role="alertdialog"`, `aria-modal="true"`) con fondo atenuado (`bg-text/40`), tarjeta `rounded-3xl` `#FFFFFF`, trampa de teclado `Tab` / `Escape`, foco inicial seguro en **Cancelar** y botón destructivo `#CA2F35` para confirmar la eliminación individual o el vaciado completo de favoritos.
+
 ## Do's and Don'ts
 
 ### Do:

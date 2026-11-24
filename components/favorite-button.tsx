@@ -16,7 +16,7 @@ export function FavoriteButton({ meal, withLabel = false, className = "" }: Favo
   return (
     <button
       type="button"
-      onClick={() => toggleFavorite(meal)}
+      onClick={() => void toggleFavorite(meal)}
       aria-pressed={active}
       aria-label={
         active

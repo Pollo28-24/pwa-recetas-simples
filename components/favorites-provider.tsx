@@ -8,6 +8,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import { useConfirm } from "@/components/confirm-dialog";
 import { useToast } from "@/components/toast-provider";
 import { getMealImageUrl } from "@/lib/mealdb";
 import type { MealSummary } from "@/lib/types";
@@ -19,8 +20,8 @@ type FavoritesContextValue = {
   favorites: MealSummary[];
   ready: boolean;
   isFavorite: (id: string) => boolean;
-  toggleFavorite: (meal: MealSummary) => void;
-  clearFavorites: () => void;
+  toggleFavorite: (meal: MealSummary) => Promise<void>;
+  clearFavorites: () => Promise<void>;
 };
 
 const FavoritesContext = createContext<FavoritesContextValue | null>(null);
@@ -127,6 +128,7 @@ function precacheMealForOffline(meal: MealSummary): void {
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const { showToast } = useToast();
+  const confirm = useConfirm();
   const favorites = useSyncExternalStore(
     subscribeFavorites,
     getFavoritesSnapshot,
@@ -157,11 +159,20 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   );
 
   const toggleFavorite = useCallback(
-    (meal: MealSummary) => {
+    async (meal: MealSummary) => {
       const current = getFavoritesSnapshot();
       const exists = current.some((item) => item.idMeal === meal.idMeal);
       if (exists) {
-        writeFavorites(current.filter((item) => item.idMeal !== meal.idMeal));
+        const confirmed = await confirm({
+          title: "Eliminar de favoritos",
+          description: `¿Querés eliminar «${meal.strMeal}» de tus recetas favoritas?`,
+          confirmLabel: "Eliminar de favoritos",
+          cancelLabel: "Cancelar",
+        });
+        if (!confirmed) return;
+
+        const latest = getFavoritesSnapshot();
+        writeFavorites(latest.filter((item) => item.idMeal !== meal.idMeal));
         showToast({
           dedupeKey: `favorite:${meal.idMeal}`,
           tone: "removed",
@@ -177,10 +188,21 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
       saveFavorite(meal);
     },
-    [saveFavorite, showToast],
+    [confirm, saveFavorite, showToast],
   );
 
-  const clearFavorites = useCallback(() => {
+  const clearFavorites = useCallback(async () => {
+    const current = getFavoritesSnapshot();
+    if (current.length === 0) return;
+
+    const confirmed = await confirm({
+      title: "Vaciar favoritos",
+      description: `Se ${current.length === 1 ? "eliminará 1 receta guardada" : `eliminarán ${current.length} recetas guardadas`} de tu lista de favoritos.`,
+      confirmLabel: "Vaciar favoritos",
+      cancelLabel: "Cancelar",
+    });
+    if (!confirmed) return;
+
     const previous = getFavoritesSnapshot();
     if (previous.length === 0) return;
 
@@ -204,7 +226,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         },
       },
     });
-  }, [showToast]);
+  }, [confirm, showToast]);
 
   const value = useMemo<FavoritesContextValue>(
     () => ({
